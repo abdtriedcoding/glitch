@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { SignIn, SignOut } from "@/components/login-logout";
 
 export default async function Home() {
@@ -14,6 +15,7 @@ export default async function Home() {
       ) : (
         <SignIn />
       )}
+      <ThemeToggle />
     </main>
   );
 }
