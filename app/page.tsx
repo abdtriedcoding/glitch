@@ -1,9 +1,19 @@
-import { Button } from "@/components/ui/button"
+import { auth } from "@/auth";
+import { SignIn, SignOut } from "@/components/login-logout";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
   return (
-    <div>
-      <Button>Click me</Button>
-    </div>
-  )
+    <main className="flex flex-col space-y-5">
+      {session?.user ? (
+        <>
+          <p>Hey {session.user.name}</p>
+          <SignOut />
+        </>
+      ) : (
+        <SignIn />
+      )}
+    </main>
+  );
 }
