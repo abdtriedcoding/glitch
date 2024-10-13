@@ -1,3 +1,6 @@
+"use client";
+
+import { InviteModal } from "@/components/modals/invite-modal";
 import { Member, User, Server, Channel, MemberRole } from "@prisma/client";
 import {
   ChevronDown,
@@ -27,6 +30,7 @@ interface ServerHeaderProps {
 export function ChannelHeader({ server, role }: ServerHeaderProps) {
   const isAdmin = role === MemberRole.ADMIN;
   const isModerator = role === MemberRole.MODERATOR || isAdmin;
+  const inviteCode = server.inviteCode;
 
   return (
     <DropdownMenu>
@@ -41,10 +45,15 @@ export function ChannelHeader({ server, role }: ServerHeaderProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 text-xs font-medium text-black dark:text-neutral-400 space-y-1">
         {isModerator && (
-          <DropdownMenuItem className="text-indigo-600 dark:text-indigo-400 px-3 py-2 cursor-pointer text-sm">
-            Invite people
-            <UserPlus className="ml-auto h-4 w-4" />
-          </DropdownMenuItem>
+          <InviteModal inviteCode={inviteCode}>
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="text-indigo-600 dark:text-indigo-400 px-3 py-2 cursor-pointer text-sm"
+            >
+              Invite people
+              <UserPlus className="ml-auto h-4 w-4" />
+            </DropdownMenuItem>
+          </InviteModal>
         )}
         {isAdmin && (
           <DropdownMenuItem className="px-3 py-2 cursor-pointer text-sm">
