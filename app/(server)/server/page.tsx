@@ -26,7 +26,7 @@ export default async function Page() {
   });
 
   if (server) {
-    return redirect(`/server/${server.id}`);
+    return redirect(`/s/${server.id}`);
   }
 
   return (
