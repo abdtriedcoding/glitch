@@ -1,3 +1,6 @@
+import { auth } from "@/auth";
+import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
 import { CreateServerModal } from "@/components/modals/create-server";
 import {
   Dialog,
@@ -7,11 +10,23 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export default function Page() {
-  const user = false;
+export default async function Page() {
+  const session = await auth();
+  const user = session?.user;
+  if (!user) redirect("/");
 
-  if (user) {
-    return <p>Redirect user to first ever server, he joined</p>;
+  const server = await prisma.server.findFirst({
+    where: {
+      members: {
+        some: {
+          userId: user.id,
+        },
+      },
+    },
+  });
+
+  if (server) {
+    return redirect(`/server/${server.id}`);
   }
 
   return (
