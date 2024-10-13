@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 import { DialogFooter } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useModalStore } from "@/hooks/use-modal-store";
 import { createServer } from "@/app/actions/createServer";
 import {
   Form,
@@ -34,8 +35,9 @@ const formSchema = z.object({
   }),
 });
 
-export function CreateServerModal() {
+export function AddServerModal() {
   const router = useRouter();
+  const { isOpen, onClose, type } = useModalStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -46,15 +48,20 @@ export function CreateServerModal() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await createServer(values);
+    const server = await createServer(values);
     router.refresh();
+    router.push(`/s/${server.id}`);
     form.reset();
+    onClose();
   }
 
   const isLoading = form.formState.isSubmitting;
 
   return (
-    <Dialog open>
+    <Dialog
+      open={isOpen && type === "createServer"}
+      onOpenChange={() => onClose()}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-center text-2xl">
