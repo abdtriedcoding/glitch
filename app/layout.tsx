@@ -6,6 +6,7 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { ThemeProvider } from "@/components/theme-provider";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { ModalProvider } from "@/components/providers/modal-provider";
 
 const font = Poppins({ subsets: ["latin"], weight: ["400"] });
 
@@ -31,6 +32,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+          <ModalProvider />
           {children}
         </ThemeProvider>
       </body>

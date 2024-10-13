@@ -20,7 +20,7 @@ export function ThemeToggle() {
         <Button
           variant="outline"
           size="icon"
-          className="h-[48px] w-[48px] rounded-full"
+          className="h-[48px] w-[48px] rounded-full dark:bg-neutral-700"
         >
           <Sun
             size={25}

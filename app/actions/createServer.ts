@@ -31,7 +31,7 @@ export async function createServer(values: z.infer<typeof formSchema>) {
   const { name, imageUrl } = validatedFields.data;
 
   try {
-    await prisma.server.create({
+    const server = await prisma.server.create({
       data: {
         userId,
         name,
@@ -55,6 +55,8 @@ export async function createServer(values: z.infer<typeof formSchema>) {
         },
       },
     });
+
+    return server;
   } catch {
     throw new Error("Something went wrong!!");
   }

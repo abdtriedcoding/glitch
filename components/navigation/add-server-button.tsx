@@ -1,11 +1,16 @@
+"use client";
+
 import { Plus } from "lucide-react";
 import { ActionTooltip } from "@/components/action-tooltip";
+import { useModalStore } from "@/hooks/use-modal-store";
 
 export function AddServerButton() {
+  const { onOpen } = useModalStore();
+
   return (
     <div>
       <ActionTooltip side="right" align="center" label="Add a server">
-        <button className="group">
+        <button onClick={() => onOpen("createServer")} className="group">
           <div
             className="flex h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] 
           transition-all overflow-hidden items-center justify-center bg-background dark:bg-neutral-700
