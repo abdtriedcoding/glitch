@@ -2,7 +2,10 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { ThemeProvider } from "@/components/theme-provider";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 
 const font = Poppins({ subsets: ["latin"], weight: ["400"] });
 
@@ -27,6 +30,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           {children}
         </ThemeProvider>
       </body>
