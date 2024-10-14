@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateRole } from "@/app/actions/updateRole";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { deleteMember } from "@/app/actions/deleteMember";
 import { Member, User, Server, Channel, MemberRole } from "@prisma/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -61,6 +62,13 @@ export function MembersModal({ server, children }: MembersModalProps) {
   ) => {
     setLoadingId(memberId);
     await updateRole(serverId, memberId, role);
+    router.refresh();
+    setLoadingId("");
+  };
+
+  const onKick = async (serverId: string, memberId: string) => {
+    setLoadingId(memberId);
+    await deleteMember(serverId, memberId);
     router.refresh();
     setLoadingId("");
   };
@@ -138,8 +146,9 @@ export function MembersModal({ server, children }: MembersModalProps) {
                           </DropdownMenuPortal>
                         </DropdownMenuSub>
                         <DropdownMenuSeparator />
-                        {/* TODO: add funtion to kick out user */}
-                        <DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => onKick(server.id, member?.id)}
+                        >
                           <Gavel className="w-4 h-4 mr-2" />
                           Kick
                         </DropdownMenuItem>
