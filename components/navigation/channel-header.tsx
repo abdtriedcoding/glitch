@@ -1,6 +1,11 @@
 "use client";
 
 import { InviteModal } from "@/components/modals/invite-modal";
+import { MembersModal } from "@/components/modals/members-modal";
+import { EditServerModal } from "@/components/modals/edit-server-modal";
+import { LeaveServerModal } from "@/components/modals/leave-server-modal";
+import { DeleteServerModal } from "@/components/modals/delete-server-modal";
+import { CreateChannelModal } from "@/components/modals/create-channel-modal";
 import { Member, User, Server, Channel, MemberRole } from "@prisma/client";
 import {
   ChevronDown,
@@ -18,10 +23,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { EditServerModal } from "../modals/edit-server-modal";
-import { MembersModal } from "../modals/members-modal";
-import { CreateChannelModal } from "../modals/create-channel-modal";
-import { DeleteServerModal } from "../modals/delete-server-modal";
 
 interface ServerHeaderProps {
   server: Server & {
@@ -109,10 +110,15 @@ export function ChannelHeader({ server, role }: ServerHeaderProps) {
           </DeleteServerModal>
         )}
         {!isAdmin && (
-          <DropdownMenuItem className="px-3 py-2 cursor-pointer text-sm">
-            Leave Server
-            <LogOut className="ml-auto h-4 w-4" />
-          </DropdownMenuItem>
+          <LeaveServerModal serverId={server.id}>
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="px-3 py-2 cursor-pointer text-sm"
+            >
+              Leave Server
+              <LogOut className="ml-auto h-4 w-4" />
+            </DropdownMenuItem>
+          </LeaveServerModal>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
