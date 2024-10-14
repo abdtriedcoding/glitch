@@ -18,6 +18,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { EditServerModal } from "../modals/edit-server-modal";
+import { MembersModal } from "../modals/members-modal";
 
 interface ServerHeaderProps {
   server: Server & {
@@ -56,16 +58,30 @@ export function ChannelHeader({ server, role }: ServerHeaderProps) {
           </InviteModal>
         )}
         {isAdmin && (
-          <DropdownMenuItem className="px-3 py-2 cursor-pointer text-sm">
-            Server Settings
-            <Settings className="ml-auto h-4 w-4" />
-          </DropdownMenuItem>
+          <EditServerModal
+            serverId={server.id}
+            name={server.name}
+            imageUrl={server.imageUrl}
+          >
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="px-3 py-2 cursor-pointer text-sm"
+            >
+              Server Settings
+              <Settings className="ml-auto h-4 w-4" />
+            </DropdownMenuItem>
+          </EditServerModal>
         )}
         {isAdmin && (
-          <DropdownMenuItem className="px-3 py-2 cursor-pointer text-sm">
-            Manage Members
-            <Users className="ml-auto h-4 w-4" />
-          </DropdownMenuItem>
+          <MembersModal server={server}>
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="px-3 py-2 cursor-pointer text-sm"
+            >
+              Manage Members
+              <Users className="ml-auto h-4 w-4" />
+            </DropdownMenuItem>
+          </MembersModal>
         )}
         {isModerator && (
           <DropdownMenuItem className="px-3 py-2 cursor-pointer text-sm">
