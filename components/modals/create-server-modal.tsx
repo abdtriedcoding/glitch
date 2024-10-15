@@ -1,6 +1,7 @@
 "use client";
 
 import { z } from "zod";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,7 @@ import { FileUpload } from "@/components/file-upload";
 import { DialogFooter } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createServer } from "@/app/actions/createServer";
+import { ServerFormSchema } from "@/lib/validationSchemas";
 import {
   Form,
   FormControl,
@@ -24,29 +26,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader2 } from "lucide-react";
-
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Server name is required.",
-  }),
-  imageUrl: z.string().min(1, {
-    message: "Server image is required.",
-  }),
-});
 
 export function CreateServerModal() {
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof ServerFormSchema>>({
+    resolver: zodResolver(ServerFormSchema),
     defaultValues: {
       name: "",
       imageUrl: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof ServerFormSchema>) {
     await createServer(values);
     router.refresh();
     form.reset();

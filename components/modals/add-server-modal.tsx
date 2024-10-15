@@ -1,15 +1,17 @@
 "use client";
 
 import { z } from "zod";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
-import { DialogFooter } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useModalStore } from "@/hooks/use-modal-store";
 import { createServer } from "@/app/actions/createServer";
+import { ServerFormSchema } from "@/lib/validationSchemas";
+import { DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -26,48 +28,44 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Server name is required.",
-  }),
-  imageUrl: z.string().min(1, {
-    message: "Server image is required.",
-  }),
-});
-
-export function AddServerModal() {
+export function AddServerModal({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { isOpen, onClose, type } = useModalStore();
+  const [open, setOpen] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof ServerFormSchema>>({
+    resolver: zodResolver(ServerFormSchema),
     defaultValues: {
       name: "",
       imageUrl: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof ServerFormSchema>) {
     const server = await createServer(values);
     router.refresh();
     router.push(`/s/${server.id}`);
     form.reset();
-    onClose();
+    setOpen(false);
   }
 
   const isLoading = form.formState.isSubmitting;
 
+  const handleModalChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      form.reset();
+    }
+  };
+
   return (
-    <Dialog
-      open={isOpen && type === "createServer"}
-      onOpenChange={() => onClose()}
-    >
-      <DialogContent>
+    <Dialog open={open} onOpenChange={handleModalChange}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="lg:max-w-screen-lg overflow-y-scroll max-h-screen scrollbar">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl">
             Create Your Server
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-center">
             Your server is, where you and your friends hang out. Make yours and
             start talking.
           </DialogDescription>
@@ -79,9 +77,11 @@ export function AddServerModal() {
               name="imageUrl"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Server Image</FormLabel>
                   <FormControl>
                     <FileUpload
                       endpoint="serverImage"
+                      disabled={isLoading}
                       value={field.value}
                       onChange={field.onChange}
                     />
@@ -109,6 +109,7 @@ export function AddServerModal() {
             />
             <DialogFooter>
               <Button variant={"primary"} disabled={isLoading} type="submit">
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Create
               </Button>
             </DialogFooter>
