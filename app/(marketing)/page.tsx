@@ -1,9 +1,31 @@
+import Link from "next/link";
 import { auth } from "@/auth";
+import prisma from "@/lib/prisma";
+import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SignIn, SignOut } from "@/components/login-logout";
 
+// TODO: Need to code marketing page
 export default async function Home() {
   const session = await auth();
+  const user = session?.user;
+
+  const server = await prisma.server.findFirst({
+    where: {
+      members: {
+        some: {
+          userId: user?.id,
+        },
+      },
+    },
+  });
+
+  let url;
+  if (server) {
+    url = `/s/${server.id}`;
+  } else {
+    url = "/server";
+  }
 
   return (
     <>
@@ -17,6 +39,9 @@ export default async function Home() {
         ) : (
           <SignIn />
         )}
+        <Button asChild>
+          <Link href={url}>Open Glitch</Link>
+        </Button>
         <ThemeToggle />
       </main>
     </>

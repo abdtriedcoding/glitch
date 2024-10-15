@@ -10,6 +10,41 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .scrollbar {
+    overflow-y: auto;
+  }
+
+  .scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #f0f0f0;
+  }
+
+  .dark .scrollbar::-webkit-scrollbar-track {
+    background: #1f2937;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #a0aec0;
+    border-radius: 10px;
+  }
+
+  .dark .scrollbar::-webkit-scrollbar-thumb {
+    background: #4a5568;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #718096;
+  }
+
+  .dark .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #2d3748;
+  }
 }
 
 @layer base {

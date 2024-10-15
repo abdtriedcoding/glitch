@@ -24,6 +24,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -55,12 +56,12 @@ export function CreateServerModal() {
 
   return (
     <Dialog open>
-      <DialogContent>
+      <DialogContent className="lg:max-w-screen-lg overflow-y-scroll max-h-screen scrollbar">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl">
             Create Your Server
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-center">
             Your server is, where you and your friends hang out. Make yours and
             start talking.
           </DialogDescription>
@@ -72,9 +73,11 @@ export function CreateServerModal() {
               name="imageUrl"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Server Image</FormLabel>
                   <FormControl>
                     <FileUpload
                       endpoint="serverImage"
+                      disabled={isLoading}
                       value={field.value}
                       onChange={field.onChange}
                     />
@@ -101,9 +104,25 @@ export function CreateServerModal() {
               )}
             />
             <DialogFooter>
-              <Button variant={"primary"} disabled={isLoading} type="submit">
-                Create
-              </Button>
+              <div className="flex items-center justify-between w-full">
+                <Button
+                  disabled={isLoading}
+                  onClick={() => {
+                    form.reset();
+                    router.push("/");
+                  }}
+                  variant="secondary"
+                  type="button"
+                >
+                  Cancel
+                </Button>
+                <Button variant={"primary"} disabled={isLoading} type="submit">
+                  {isLoading && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Create
+                </Button>
+              </div>
             </DialogFooter>
           </form>
         </Form>
