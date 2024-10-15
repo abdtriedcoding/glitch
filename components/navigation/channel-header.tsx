@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { EditServerModal } from "../modals/edit-server-modal";
 import { MembersModal } from "../modals/members-modal";
+import { CreateChannelModal } from "../modals/create-channel-modal";
 
 interface ServerHeaderProps {
   server: Server & {
@@ -84,10 +85,15 @@ export function ChannelHeader({ server, role }: ServerHeaderProps) {
           </MembersModal>
         )}
         {isModerator && (
-          <DropdownMenuItem className="px-3 py-2 cursor-pointer text-sm">
-            Create Channel
-            <PlusCircle className="ml-auto h-4 w-4" />
-          </DropdownMenuItem>
+          <CreateChannelModal serverId={server.id}>
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="px-3 py-2 cursor-pointer text-sm"
+            >
+              Create Channel
+              <PlusCircle className="ml-auto h-4 w-4" />
+            </DropdownMenuItem>
+          </CreateChannelModal>
         )}
         {isModerator && <DropdownMenuSeparator />}
         {isAdmin && (
