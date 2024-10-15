@@ -21,6 +21,7 @@ import {
 import { EditServerModal } from "../modals/edit-server-modal";
 import { MembersModal } from "../modals/members-modal";
 import { CreateChannelModal } from "../modals/create-channel-modal";
+import { DeleteServerModal } from "../modals/delete-server-modal";
 
 interface ServerHeaderProps {
   server: Server & {
@@ -97,10 +98,15 @@ export function ChannelHeader({ server, role }: ServerHeaderProps) {
         )}
         {isModerator && <DropdownMenuSeparator />}
         {isAdmin && (
-          <DropdownMenuItem className="text-rose-500 px-3 py-2 cursor-pointer text-sm">
-            Delete Server
-            <Trash className="ml-auto h-4 w-4" />
-          </DropdownMenuItem>
+          <DeleteServerModal serverId={server.id} serverName={server.name}>
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="text-rose-500 px-3 py-2 cursor-pointer text-sm"
+            >
+              Delete Server
+              <Trash className="ml-auto h-4 w-4" />
+            </DropdownMenuItem>
+          </DeleteServerModal>
         )}
         {!isAdmin && (
           <DropdownMenuItem className="px-3 py-2 cursor-pointer text-sm">
