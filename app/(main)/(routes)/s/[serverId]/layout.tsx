@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
-import { ChannelSidebar } from "@/components/navigation/channel-sidebar";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { ChannelSidebar } from "@/components/server/channel-sidebar";
 
 export default async function ServerIdLayout({
   children,
@@ -25,6 +25,21 @@ export default async function ServerIdLayout({
         },
       },
     },
+    include: {
+      channels: {
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+      members: {
+        include: {
+          user: true,
+        },
+        orderBy: {
+          role: "asc",
+        },
+      },
+    },
   });
 
   if (!server) {
@@ -34,7 +49,7 @@ export default async function ServerIdLayout({
   return (
     <div className="min-h-screen">
       <div className="w-60 min-h-screen hidden flex-col md:flex fixed inset-y-0 z-30">
-        <ChannelSidebar serverId={params.serverId} />
+        <ChannelSidebar server={server} />
       </div>
       <main className="md:pl-60 min-h-screen">{children}</main>
     </div>

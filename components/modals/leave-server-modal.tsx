@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { leaveServer } from "@/app/actions/leaveServer";
@@ -61,6 +62,7 @@ export function LeaveServerModal({
               Cancel
             </Button>
             <Button variant="primary" disabled={isLoading} onClick={onLeave}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Leave
             </Button>
           </div>

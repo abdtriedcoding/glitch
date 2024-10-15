@@ -40,7 +40,9 @@ export default async function Home() {
           <SignIn />
         )}
         <Button asChild>
-          <Link href={url}>Open Glitch</Link>
+          <Link prefetch={false} href={url}>
+            Open Glitch
+          </Link>
         </Button>
         <ThemeToggle />
       </main>

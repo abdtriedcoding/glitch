@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { deleteServer } from "@/app/actions/deleteServer";
@@ -63,8 +64,9 @@ export function DeleteServerModal({
             >
               Cancel
             </Button>
-            <Button variant="primary" disabled={isLoading} onClick={onDelete}>
-              Leave
+            <Button variant={"primary"} disabled={isLoading} onClick={onDelete}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Delete
             </Button>
           </div>
         </DialogFooter>

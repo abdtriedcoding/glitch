@@ -1,6 +1,8 @@
 "use client";
 
 import { z } from "zod";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -8,11 +10,8 @@ import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateServer } from "@/app/actions/updateServer";
-import {
-  DialogClose,
-  DialogFooter,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { ServerFormSchema } from "@/lib/validationSchemas";
+import { DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -29,15 +28,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Server name is required.",
-  }),
-  imageUrl: z.string().min(1, {
-    message: "Server image is required.",
-  }),
-});
-
 export function EditServerModal({
   children,
   name,
@@ -50,32 +40,33 @@ export function EditServerModal({
   serverId: string;
 }) {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof ServerFormSchema>>({
+    resolver: zodResolver(ServerFormSchema),
     defaultValues: {
       name,
       imageUrl,
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof ServerFormSchema>) {
     await updateServer(values, serverId);
     router.refresh();
-    form.reset();
+    setOpen(false);
   }
 
   const isLoading = form.formState.isSubmitting;
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="overflow-y-scroll max-h-screen scrollbar">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl">
             Customize Your Server
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-center">
             Personalize your server for you and your friends. Set it up and
             start chatting!
           </DialogDescription>
@@ -90,6 +81,7 @@ export function EditServerModal({
                   <FormControl>
                     <FileUpload
                       endpoint="serverImage"
+                      disabled={isLoading}
                       value={field.value}
                       onChange={field.onChange}
                     />
@@ -116,11 +108,10 @@ export function EditServerModal({
               )}
             />
             <DialogFooter>
-              <DialogClose asChild>
-                <Button variant={"primary"} disabled={isLoading} type="submit">
-                  Save
-                </Button>
-              </DialogClose>
+              <Button variant={"primary"} disabled={isLoading} type="submit">
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Save
+              </Button>
             </DialogFooter>
           </form>
         </Form>

@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AddServerButton } from "@/components/server/add-server-button";
 import { NavigationItem } from "@/components/navigation/navigation-item";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export async function Sidebar() {
   const session = await auth();
@@ -44,7 +45,10 @@ export async function Sidebar() {
       <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
       <div className="flex flex-col items-center gap-y-4">
         <ThemeToggle />
-        {/* TODO: Add user profile drowdown */}
+        <Avatar className="h-[48px] w-[48px] dark:bg-zinc-700 bg-muted">
+          <AvatarImage src={user.image ?? ""} />
+          <AvatarFallback>{user.name?.charAt(0)}</AvatarFallback>
+        </Avatar>
       </div>
     </div>
   );

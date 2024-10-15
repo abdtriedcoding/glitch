@@ -22,10 +22,15 @@ export function NavigationItem({ id, imageUrl, name }: NavigationItemProps) {
           className={cn(
             "relative group flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden",
             params?.serverId === id &&
-              "bg-primary/10 text-primary rounded-[16px]"
+              "bg-primary/10 text-primary rounded-[16px] border-2 border-green-500"
           )}
         >
-          <Image fill src={imageUrl} className="w-full h-full" alt="Server" />
+          <Image
+            fill
+            src={imageUrl}
+            className="w-full h-full object-cover"
+            alt="Server"
+          />
         </div>
       </button>
     </ActionTooltip>

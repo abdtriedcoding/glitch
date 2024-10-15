@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function leaveServer(serverId: string) {
   const session = await auth();
@@ -31,6 +32,7 @@ export async function leaveServer(serverId: string) {
         },
       },
     });
+    revalidatePath(`/s/${serverId}`);
   } catch {
     throw new Error("Something went wrong!!");
   }
