@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { SearchIcon } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
 import {
   CommandDialog,
   CommandEmpty,
@@ -14,6 +15,7 @@ import {
 interface SearchProps {
   searchData: {
     label: string;
+    type: string;
     data:
       | {
           id: string;
@@ -24,6 +26,8 @@ interface SearchProps {
 }
 
 export function Search({ searchData }: SearchProps) {
+  const router = useRouter();
+  const params = useParams();
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -37,6 +41,18 @@ export function Search({ searchData }: SearchProps) {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
+
+  const onClick = ({ id, type }: { id: string; type: string }) => {
+    setOpen(false);
+
+    if (type === "channel") {
+      router.push(`/s/${params?.serverId}/channels/${id}`);
+    }
+
+    if (type === "member") {
+      router.push(`/s/${params?.serverId}/conversations/${id}`);
+    }
+  };
 
   return (
     <>
@@ -56,16 +72,15 @@ export function Search({ searchData }: SearchProps) {
         </kbd>
       </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search all channels and members" />{" "}
+        <CommandInput placeholder="Search all channels and members" />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
-          {searchData.map(({ label, data }) => {
+          {searchData.map(({ label, type, data }) => {
             if (!data?.length) return null;
             return (
               <CommandGroup key={label} heading={label}>
                 {data.map(({ id, name, icon }) => (
-                  // TODO: add routes
-                  <CommandItem key={id} onSelect={() => setOpen(false)}>
+                  <CommandItem key={id} onSelect={() => onClick({ id, type })}>
                     {icon}
                     <span className="text-sm font-semibold">{name}</span>
                   </CommandItem>
