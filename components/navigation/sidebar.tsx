@@ -4,8 +4,8 @@ import { redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { AddServerButton } from "@/components/server/add-server-button";
 import { NavigationItem } from "@/components/navigation/navigation-item";
-import { AddServerButton } from "@/components/navigation/add-server-button";
 
 export async function Sidebar() {
   const session = await auth();
