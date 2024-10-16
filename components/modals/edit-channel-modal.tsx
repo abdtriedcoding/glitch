@@ -9,7 +9,7 @@ import { ChannelType } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createChannel } from "@/app/actions/createChannel";
+import { editChannel } from "@/app/actions/editChannel";
 import { ChannelFormSchema } from "@/lib/validationSchemas";
 import { DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -34,12 +34,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export function CreateChannelModal({
+export function EditChannelModal({
   children,
   serverId,
+  channelId,
+  name,
+  type,
 }: {
   children: React.ReactNode;
   serverId: string;
+  channelId: string;
+  name: string;
+  type: ChannelType;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -47,13 +53,13 @@ export function CreateChannelModal({
   const form = useForm<z.infer<typeof ChannelFormSchema>>({
     resolver: zodResolver(ChannelFormSchema),
     defaultValues: {
-      name: "",
-      type: ChannelType.TEXT,
+      name,
+      type: type ?? ChannelType.TEXT,
     },
   });
 
   async function onSubmit(values: z.infer<typeof ChannelFormSchema>) {
-    await createChannel(values, serverId);
+    await editChannel(values, serverId, channelId);
     router.refresh();
     form.reset();
     setOpen(false);
@@ -67,7 +73,7 @@ export function CreateChannelModal({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-center text-2xl">
-            Create Channel
+            Customize Channel
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -124,7 +130,7 @@ export function CreateChannelModal({
             <DialogFooter>
               <Button variant={"primary"} disabled={isLoading} type="submit">
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Create
+                Save
               </Button>
             </DialogFooter>
           </form>
