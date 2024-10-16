@@ -110,7 +110,7 @@ export function ChannelHeader({ server, role }: ServerHeaderProps) {
           </DeleteServerModal>
         )}
         {!isAdmin && (
-          <LeaveServerModal serverId={server.id}>
+          <LeaveServerModal serverId={server.id} serverName={server.name}>
             <DropdownMenuItem
               onSelect={(e) => e.preventDefault()}
               className="px-3 py-2 cursor-pointer text-sm"
