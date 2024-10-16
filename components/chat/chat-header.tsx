@@ -1,5 +1,6 @@
 import { Hash } from "lucide-react";
 import { Member, User, Server, Channel } from "@prisma/client";
+import { SocketIndicator } from "@/components/socket-indicator";
 import { MobileSidebar } from "@/components/navigation/mobile-sidebar";
 
 export function ChatHeader({
@@ -24,6 +25,9 @@ export function ChatHeader({
         <Hash className="w-5 h-5 text-zinc-500 dark:text-zinc-400" />
       )}
       <p className="font-semibold text-md text-black dark:text-white">{name}</p>
+      <div className="ml-auto">
+        <SocketIndicator />
+      </div>
     </div>
   );
 }

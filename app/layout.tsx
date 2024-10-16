@@ -5,6 +5,7 @@ import { Poppins } from "next/font/google";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SocketProvider } from "@/components/socket-provider";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { ModalProvider } from "@/components/providers/modal-provider";
 
@@ -32,8 +33,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-          <ModalProvider />
-          {children}
+          <SocketProvider>
+            <ModalProvider />
+            {children}
+          </SocketProvider>
         </ThemeProvider>
       </body>
     </html>
