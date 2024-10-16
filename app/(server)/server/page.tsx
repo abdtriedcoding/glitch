@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { CreateServerModal } from "@/components/modals/create-server";
+import { CreateServerModal } from "@/components/modals/create-server-modal";
 
 export default async function Page() {
   const session = await auth();
