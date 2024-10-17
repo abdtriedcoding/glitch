@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { ChatInput } from "@/components/chat/chat-input";
 import { ChatHeader } from "@/components/chat/chat-header";
+import { ChatMessages } from "@/components/chat/chat-messages";
+import { getChannelMessages } from "@/app/actions/getChannelMessages";
 
 interface ChannelIdPageProps {
   params: {
@@ -61,15 +63,16 @@ export default async function Page({ params }: ChannelIdPageProps) {
     return redirect("/");
   }
 
+  const serializedMessages = await getChannelMessages(channelId);
+
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col min-h-screen">
       <ChatHeader name={channel.name} server={server} type="channel" />
-      <div className="flex-1">Future Messages will be shown here!!</div>
+      <ChatMessages name={channel.name} initialMessages={serializedMessages} />
       <ChatInput
         name={channel?.name}
         channelId={channelId}
         serverId={serverId}
-        // profileId={profile.id}
       />
     </div>
   );
