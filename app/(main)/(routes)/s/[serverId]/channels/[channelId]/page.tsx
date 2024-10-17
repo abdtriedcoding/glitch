@@ -68,7 +68,11 @@ export default async function Page({ params }: ChannelIdPageProps) {
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col min-h-screen">
       <ChatHeader name={channel.name} server={server} type="channel" />
-      <ChatMessages name={channel.name} initialMessages={serializedMessages} />
+      <ChatMessages
+        name={channel.name}
+        initialMessages={serializedMessages}
+        channelId={channelId}
+      />
       <ChatInput
         name={channel?.name}
         channelId={channelId}
