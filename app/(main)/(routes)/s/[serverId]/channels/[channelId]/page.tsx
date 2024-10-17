@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { ChatInput } from "@/components/chat/chat-input";
 import { ChatHeader } from "@/components/chat/chat-header";
 
 interface ChannelIdPageProps {
@@ -63,6 +64,13 @@ export default async function Page({ params }: ChannelIdPageProps) {
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col min-h-screen">
       <ChatHeader name={channel.name} server={server} type="channel" />
+      <div className="flex-1">Future Messages will be shown here!!</div>
+      <ChatInput
+        name={channel?.name}
+        channelId={channelId}
+        serverId={serverId}
+        // profileId={profile.id}
+      />
     </div>
   );
 }
