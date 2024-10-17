@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Edit, Hash, Lock, Mic, Trash, Video } from "lucide-react";
 import { EditServerModal } from "@/components/modals/edit-server-modal";
 import { DeleteServerModal } from "@/components/modals/delete-server-modal";
@@ -39,10 +39,16 @@ export function ServerChannel({
   };
 }) {
   const params = useParams();
+  const router = useRouter();
+
+  const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    router.push(`/s/${server.id}/channels/${channel.id}`);
+  };
 
   return (
     <button
-      onClick={() => {}}
+      onClick={(e) => onClick(e)}
       className={cn(
         "group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zince-700/10 dark:hover:bg-zinc-700/50 transition mb-1",
         params?.channelId === channel.id && "bg-zinc-700/20 dark:bg-zinc-700"
@@ -60,6 +66,7 @@ export function ServerChannel({
       </p>
       {channel.name !== "general" && role !== MemberRole.GUEST && (
         <div className="flex items-center gap-x-2 ml-auto">
+          {/* TODO: need to implement this edit and delete channel modalfunctionality */}
           <EditServerModal
             serverId={server.id}
             name={server.name}

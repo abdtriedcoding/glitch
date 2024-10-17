@@ -4,12 +4,12 @@ import { ChannelType } from "@prisma/client";
 import { Search } from "@/components/search";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Member, User, Server, Channel } from "@prisma/client";
+import { ServerMember } from "@/components/server/server-member";
+import { ServerChannel } from "@/components/server/server-channel";
 import { ChannelHeader } from "@/components/server/channel-header";
 import { ChannelHeading } from "@/components/navigation/channel-heading";
 import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from "lucide-react";
-import { ServerChannel } from "./server-channel";
-import { ServerMember } from "./server-member";
-import { Member, User, Server, Channel } from "@prisma/client";
 
 const channelIcons = {
   [ChannelType.TEXT]: <Hash className="h-4 w-4 mr-2" />,
@@ -56,6 +56,7 @@ export async function ChannelSidebar({ server }: ChannelSidebarProps) {
   const searchData = [
     {
       label: "Text Channels",
+      type: "channel",
       data: textChannels.map((channel) => ({
         id: channel.id,
         name: channel.name,
@@ -64,6 +65,7 @@ export async function ChannelSidebar({ server }: ChannelSidebarProps) {
     },
     {
       label: "Voice Channels",
+      type: "channel",
       data: audioChannels.map((channel) => ({
         id: channel.id,
         name: channel.name,
@@ -72,6 +74,7 @@ export async function ChannelSidebar({ server }: ChannelSidebarProps) {
     },
     {
       label: "Video Channels",
+      type: "channel",
       data: videoChannels.map((channel) => ({
         id: channel.id,
         name: channel.name,
@@ -80,6 +83,7 @@ export async function ChannelSidebar({ server }: ChannelSidebarProps) {
     },
     {
       label: "Members",
+      type: "member",
       data: members?.map((member) => ({
         id: member.id,
         name: member.user.name,
