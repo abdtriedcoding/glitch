@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { ChannelType } from "@prisma/client";
-import { Search } from "@/components/search";
+import { Search } from "@/components/server/search";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Member, User, Server, Channel } from "@prisma/client";
