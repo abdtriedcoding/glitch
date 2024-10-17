@@ -23,6 +23,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { sendChannelMessage } from "@/app/actions/sendChannelMessage";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   fileUrl: z.string().min(1, {
@@ -30,7 +32,16 @@ const formSchema = z.object({
   }),
 });
 
-export function MessageFileModal({ children }: { children: React.ReactNode }) {
+export function MessageFileModal({
+  children,
+  channelId,
+  serverId,
+}: {
+  children: React.ReactNode;
+  channelId: string;
+  serverId: string;
+}) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const form = useForm({
@@ -41,7 +52,17 @@ export function MessageFileModal({ children }: { children: React.ReactNode }) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    await sendChannelMessage(
+      {
+        ...values,
+        content: values.fileUrl,
+      },
+      channelId,
+      serverId
+    );
+    router.refresh();
+    form.reset();
+    setOpen(false);
   }
 
   const isLoading = form.formState.isSubmitting;
@@ -68,7 +89,7 @@ export function MessageFileModal({ children }: { children: React.ReactNode }) {
                   <FormLabel>Add Attachment</FormLabel>
                   <FormControl>
                     <FileUpload
-                      endpoint="serverImage"
+                      endpoint="messageFile"
                       disabled={isLoading}
                       value={field.value}
                       onChange={field.onChange}
