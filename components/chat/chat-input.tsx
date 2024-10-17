@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { EmojiPicker } from "@/components/emoji-picker";
 import { ChatInputFormSchema } from "@/lib/validationSchemas";
 import { sendChannelMessage } from "@/app/actions/sendChannelMessage";
 import { MessageFileModal } from "@/components/modals/message-file-modal";
@@ -63,13 +64,13 @@ export function ChatInput({
                     placeholder={`Message "#" ${name}`}
                     {...field}
                   />
-                  {/* <div className="absolute top-7 right-8">
+                  <div className="absolute top-7 right-8">
                     <EmojiPicker
                       onChange={(emoji: string) =>
                         field.onChange(`${field.value} ${emoji}`)
                       }
                     />
-                  </div> */}
+                  </div>
                 </div>
               </FormControl>
             </FormItem>
