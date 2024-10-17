@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { ChannelType } from "@prisma/client";
@@ -36,7 +37,7 @@ const formSchema = z.object({
   name: z
     .string()
     .min(1, {
-      message: "Server name is required.",
+      message: "Channel name is required.",
     })
     .max(32)
     .refine((name) => name !== "general", {
@@ -65,9 +66,9 @@ export function CreateChannelModal({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     await createChannel(values, serverId);
-    setOpen(false);
     router.refresh();
     form.reset();
+    setOpen(false);
   }
 
   const isLoading = form.formState.isSubmitting;
@@ -88,11 +89,11 @@ export function CreateChannelModal({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Server Name</FormLabel>
+                  <FormLabel>Channel Name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isLoading}
-                      placeholder="Enter server name"
+                      placeholder="Enter channel name"
                       {...field}
                     />
                   </FormControl>
@@ -134,6 +135,7 @@ export function CreateChannelModal({
             />
             <DialogFooter>
               <Button variant={"primary"} disabled={isLoading} type="submit">
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Create
               </Button>
             </DialogFooter>

@@ -1,15 +1,15 @@
 import { auth } from "@/auth";
-import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { ChannelType } from "@prisma/client";
 import { Search } from "@/components/search";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChannelHeader } from "@/components/navigation/channel-header";
+import { ChannelHeader } from "@/components/server/channel-header";
 import { ChannelHeading } from "@/components/navigation/channel-heading";
 import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from "lucide-react";
-import { ServerChannel } from "../server/server-channel";
-import { ServerMember } from "../server/server-member";
+import { ServerChannel } from "./server-channel";
+import { ServerMember } from "./server-member";
+import { Member, User, Server, Channel } from "@prisma/client";
 
 const channelIcons = {
   [ChannelType.TEXT]: <Hash className="h-4 w-4 mr-2" />,
@@ -23,35 +23,17 @@ const roleIcons = {
   ADMIN: <ShieldAlert className="w-4 h-4 mr-2 text-rose-500" />,
 };
 
-export async function ChannelSidebar({ serverId }: { serverId: string }) {
+interface ChannelSidebarProps {
+  server: Server & {
+    channels: Channel[];
+    members: (Member & { user: User })[];
+  };
+}
+
+export async function ChannelSidebar({ server }: ChannelSidebarProps) {
   const session = await auth();
   const user = session?.user;
   if (!user) redirect("/");
-
-  const server = await prisma.server.findUnique({
-    where: {
-      id: serverId,
-    },
-    include: {
-      channels: {
-        orderBy: {
-          createdAt: "asc",
-        },
-      },
-      members: {
-        include: {
-          user: true,
-        },
-        orderBy: {
-          role: "asc",
-        },
-      },
-    },
-  });
-
-  if (!server) {
-    return redirect("/");
-  }
 
   const textChannels = server?.channels.filter(
     (channel) => channel.type === "TEXT"

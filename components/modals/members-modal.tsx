@@ -76,7 +76,7 @@ export function MembersModal({ server, children }: MembersModalProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="overflow-y-scroll max-h-screen scrollbar">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl">
             Manage Members
