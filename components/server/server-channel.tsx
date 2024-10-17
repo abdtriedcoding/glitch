@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
 import { Edit, Hash, Lock, Mic, Trash, Video } from "lucide-react";
-import { EditServerModal } from "@/components/modals/edit-server-modal";
+import { EditChannelModal } from "@/components/modals/edit-channel-modal";
 import { DeleteServerModal } from "@/components/modals/delete-server-modal";
 import {
   Member,
@@ -66,17 +66,15 @@ export function ServerChannel({
       </p>
       {channel.name !== "general" && role !== MemberRole.GUEST && (
         <div className="flex items-center gap-x-2 ml-auto">
-          {/* TODO: need to implement this edit and delete channel modalfunctionality */}
-          <EditServerModal
+          <EditChannelModal
             serverId={server.id}
-            name={server.name}
-            imageUrl={server.imageUrl}
+            channelId={channel.id}
+            name={channel.name}
+            type={channel.type}
           >
-            <Edit
-              onClick={() => {}}
-              className="hidden group-hover:block h-4 w-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-            />
-          </EditServerModal>
+            <Edit className="hidden group-hover:block h-4 w-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+          </EditChannelModal>
+          {/* TODO: need to implement this edit and delete channel modalfunctionality */}
           <DeleteServerModal serverId={server.id} serverName={server.name}>
             <Trash
               onClick={() => {}}

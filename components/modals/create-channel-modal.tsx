@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createChannel } from "@/app/actions/createChannel";
+import { ChannelFormSchema } from "@/lib/validationSchemas";
 import { DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import {
   Form,
@@ -33,19 +34,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(1, {
-      message: "Channel name is required.",
-    })
-    .max(32)
-    .refine((name) => name !== "general", {
-      message: "Channel name cannot be 'general'.",
-    }),
-  type: z.nativeEnum(ChannelType),
-});
-
 export function CreateChannelModal({
   children,
   serverId,
@@ -56,15 +44,15 @@ export function CreateChannelModal({
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof ChannelFormSchema>>({
+    resolver: zodResolver(ChannelFormSchema),
     defaultValues: {
       name: "",
       type: ChannelType.TEXT,
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof ChannelFormSchema>) {
     await createChannel(values, serverId);
     router.refresh();
     form.reset();
