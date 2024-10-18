@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { pusherClient } from "@/lib/pusherClient";
 import { Member, Message, User } from "@prisma/client";
+import { ChatItem } from "@/components/chat/chat-item";
 import { ChatWelcome } from "@/components/chat/chat-welcome";
 
 type MessageWithMemberWithProfile = Message & {
@@ -13,10 +14,12 @@ export function ChatMessages({
   name,
   initialMessages,
   channelId,
+  currentMember,
 }: {
   name: string;
   initialMessages: MessageWithMemberWithProfile[];
   channelId: string;
+  currentMember: Member;
 }) {
   const [incomingMessages, setIncomingMessages] = useState(initialMessages);
 
@@ -47,9 +50,7 @@ export function ChatMessages({
       <div className="flex flex-col mt-auto">
         {incomingMessages.map((message, i) => (
           <div key={i}>
-            <p className="pb-2">
-              <strong>{message.member.user.name}:</strong> {message.content}
-            </p>
+            <ChatItem message={message} currentMember={currentMember} />
           </div>
         ))}
       </div>
