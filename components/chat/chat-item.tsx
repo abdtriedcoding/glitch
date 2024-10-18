@@ -1,17 +1,19 @@
 import { z } from "zod";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Member, MemberRole, Message, User } from "@prisma/client";
 import { ActionTooltip } from "@/components/action-tooltip";
-import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
+import { Member, MemberRole, Message, User } from "@prisma/client";
 import { Form, FormControl, FormField } from "@/components/ui/form";
+import { editChannelMessage } from "@/app/actions/editChannelMessage";
+import { EditChannelMessageformSchema } from "@/lib/validationSchemas";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
 
 const roleIcons = {
   GUEST: null,
@@ -19,11 +21,9 @@ const roleIcons = {
   ADMIN: <ShieldAlert className="h-4 w-4 text-rose-500" />,
 };
 
-const formSchema = z.object({
-  content: z.string().min(1),
-});
-
 interface MessageWithMemberWithProfile {
+  channelId: string;
+  serverId: string;
   message: Message & {
     member: Member & { user: User };
   };
@@ -31,6 +31,8 @@ interface MessageWithMemberWithProfile {
 }
 
 export function ChatItem({
+  channelId,
+  serverId,
   message,
   currentMember,
 }: MessageWithMemberWithProfile) {
@@ -38,7 +40,9 @@ export function ChatItem({
   const fileType = message.fileUrl?.split(".").pop();
   const isPdf = fileType === "pdf" && message.fileUrl;
   const isImage = !isPdf && message.fileUrl;
-  const isUpdated = message.updatedAt !== message.createdAt;
+  const isUpdated =
+    new Date(message?.updatedAt).getTime() !==
+    new Date(message?.createdAt).getTime();
   const isAdmin = currentMember.role === MemberRole.ADMIN;
   const isModerator = currentMember.role === MemberRole.MODERATOR;
   const isOwner = message.member.id === currentMember.id;
@@ -46,16 +50,21 @@ export function ChatItem({
     !message.deleted && (isAdmin || isModerator || isOwner);
   const canEditMessage = !message.deleted && isOwner && !message.fileUrl;
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof EditChannelMessageformSchema>>({
+    resolver: zodResolver(EditChannelMessageformSchema),
     defaultValues: {
       content: message.content!,
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (
+    values: z.infer<typeof EditChannelMessageformSchema>
+  ) => {
+    await editChannelMessage(values, serverId, channelId, message.id);
+    form.reset();
+    setIsEditiing(false);
   };
+
   const isLoading = form.formState.isSubmitting;
 
   useEffect(() => {

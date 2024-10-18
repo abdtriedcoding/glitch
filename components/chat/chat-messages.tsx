@@ -14,11 +14,13 @@ export function ChatMessages({
   name,
   initialMessages,
   channelId,
+  serverId,
   currentMember,
 }: {
   name: string;
   initialMessages: MessageWithMemberWithProfile[];
   channelId: string;
+  serverId: string;
   currentMember: Member;
 }) {
   const [incomingMessages, setIncomingMessages] = useState(initialMessages);
@@ -32,6 +34,17 @@ export function ChatMessages({
     };
 
     pusherClient.bind("incoming-message", messageHandler);
+
+    pusherClient.bind(
+      "message-updated",
+      (updatedMessage: MessageWithMemberWithProfile) => {
+        setIncomingMessages((prev) =>
+          prev.map((message) =>
+            message.id === updatedMessage.id ? updatedMessage : message
+          )
+        );
+      }
+    );
 
     return () => {
       pusherClient.unbind("incoming-message", messageHandler);
@@ -50,7 +63,12 @@ export function ChatMessages({
       <div className="flex flex-col mt-auto">
         {incomingMessages.map((message, i) => (
           <div key={i}>
-            <ChatItem message={message} currentMember={currentMember} />
+            <ChatItem
+              channelId={channelId}
+              serverId={serverId}
+              message={message}
+              currentMember={currentMember}
+            />
           </div>
         ))}
       </div>

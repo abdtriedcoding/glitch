@@ -27,3 +27,7 @@ export const ChatInputFormSchema = z.object({
   content: z.string().min(1),
   fileUrl: z.string().optional(),
 });
+
+export const EditChannelMessageformSchema = z.object({
+  content: z.string().min(1),
+});
