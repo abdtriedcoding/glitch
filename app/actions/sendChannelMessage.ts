@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
+import { pusherServer } from "@/lib/pusherServer";
 import { ChatInputFormSchema } from "@/lib/validationSchemas";
 
 export async function sendChannelMessage(
@@ -60,14 +61,23 @@ export async function sendChannelMessage(
       throw new Error("Member not found");
     }
 
-    await prisma.message.create({
+    const message = await prisma.message.create({
       data: {
         content,
         fileUrl,
         channelId,
         memberId: member.id,
       },
+      include: {
+        member: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
+
+    pusherServer.trigger(channelId, "incoming-message", message);
   } catch {
     throw new Error("Something went wrong!!");
   }

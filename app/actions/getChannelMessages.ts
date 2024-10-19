@@ -23,7 +23,7 @@ export async function getChannelMessages(channelId: string) {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     });
 
