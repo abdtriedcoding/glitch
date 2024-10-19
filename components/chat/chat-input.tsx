@@ -30,7 +30,7 @@ export function ChatInput({
   });
 
   async function onSubmit(values: z.infer<typeof ChatInputFormSchema>) {
-    sendChannelMessage(values, channelId, serverId);
+    await sendChannelMessage(values, channelId, serverId);
     form.reset();
     router.refresh();
   }
@@ -46,7 +46,7 @@ export function ChatInput({
             <FormItem>
               <FormControl>
                 <div className="relative p-4 pb-6">
-                  <MessageFileModal>
+                  <MessageFileModal channelId={channelId} serverId={serverId}>
                     <button
                       type="button"
                       className="absolute top-7 left-8 h-[24px] w-[24px]

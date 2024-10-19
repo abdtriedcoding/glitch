@@ -22,8 +22,7 @@ export async function sendChannelMessage(
     throw new Error("Invalid fields. Failed to create server.");
   }
 
-  const { content } = validatedFields.data;
-  console.log(content);
+  const { content, fileUrl } = validatedFields.data;
 
   try {
     const server = await prisma.server.findFirst({
@@ -64,7 +63,8 @@ export async function sendChannelMessage(
     await prisma.message.create({
       data: {
         content,
-        channelId: channelId,
+        fileUrl,
+        channelId,
         memberId: member.id,
       },
     });
