@@ -1,51 +1,34 @@
-import Link from "next/link";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { SignIn, SignOut } from "@/components/login-logout";
+import { Navbar } from "@/components/marketing/navbar";
+import { HeroSection } from "@/components/marketing/hero-section";
 
-// TODO: Need to code marketing page
 export default async function Home() {
   const session = await auth();
   const user = session?.user;
 
-  const server = await prisma.server.findFirst({
-    where: {
-      members: {
-        some: {
-          userId: user?.id,
+  let url = "/server";
+
+  if (user) {
+    const server = await prisma.server.findFirst({
+      where: {
+        members: {
+          some: {
+            userId: user.id,
+          },
         },
       },
-    },
-  });
+    });
 
-  let url;
-  if (server) {
-    url = `/s/${server.id}`;
-  } else {
-    url = "/server";
+    if (server) {
+      url = `/s/${server.id}`;
+    }
   }
 
   return (
-    <>
-      <h1 className="text-3xl text-center bg-red-500">Marketing Page</h1>
-      <main className="flex flex-col space-y-5">
-        {session?.user ? (
-          <>
-            <p>Hey {session.user.name}</p>
-            <SignOut />
-          </>
-        ) : (
-          <SignIn />
-        )}
-        <Button asChild>
-          <Link prefetch={false} href={url}>
-            Open Glitch
-          </Link>
-        </Button>
-        <ThemeToggle />
-      </main>
-    </>
+    <div className="bg-gray-100 dark:bg-black">
+      <Navbar url={url} />
+      <HeroSection url={url} />
+    </div>
   );
 }
