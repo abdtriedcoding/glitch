@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DialogTrigger } from "@/components/ui/dialog";
 import { ActionTooltip } from "@/components/action-tooltip";
 import { Member, MemberRole, Message, User } from "@prisma/client";
 import { Form, FormControl, FormField } from "@/components/ui/form";
@@ -14,6 +15,7 @@ import { editChannelMessage } from "@/app/actions/editChannelMessage";
 import { EditChannelMessageformSchema } from "@/lib/validationSchemas";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
+import { DeleteMessagelModal } from "@/components/modals/delete-message-modal";
 
 const roleIcons = {
   GUEST: null,
@@ -201,13 +203,20 @@ export function ChatItem({
             </ActionTooltip>
           )}
           {canDeleteMessage && (
-            <ActionTooltip label="Delete">
-              <Trash
-                className="h-4 w-4 text-zinc-500 dark:text-zinc-400
-                hover:text-zinc-600 dark:hover:text-zinc-300 cursor-pointer ml-auto transition"
-                onClick={() => {}}
-              />
-            </ActionTooltip>
+            <DeleteMessagelModal
+              serverId={serverId}
+              channelId={channelId}
+              messageId={message.id}
+            >
+              <ActionTooltip label="Delete">
+                <DialogTrigger asChild>
+                  <Trash
+                    className="h-4 w-4 text-zinc-500 dark:text-zinc-400
+        hover:text-zinc-600 dark:hover:text-zinc-300 cursor-pointer ml-auto transition"
+                  />
+                </DialogTrigger>
+              </ActionTooltip>
+            </DeleteMessagelModal>
           )}
         </div>
       )}

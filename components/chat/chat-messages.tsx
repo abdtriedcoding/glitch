@@ -46,6 +46,17 @@ export function ChatMessages({
       }
     );
 
+    pusherClient.bind(
+      "message-deleted",
+      (updatedMessage: MessageWithMemberWithProfile) => {
+        setIncomingMessages((prev) =>
+          prev.map((message) =>
+            message.id === updatedMessage.id ? updatedMessage : message
+          )
+        );
+      }
+    );
+
     return () => {
       pusherClient.unbind("incoming-message", messageHandler);
       pusherClient.unsubscribe(channelId);
