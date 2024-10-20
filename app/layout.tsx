@@ -1,5 +1,6 @@
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import { extractRouterConfig } from "uploadthing/server";
@@ -33,8 +34,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
+          {/* TODO: need to check if this modla provider is needed or not */}
           <ModalProvider />
           {children}
+          <Toaster richColors position="bottom-right" />
         </ThemeProvider>
       </body>
     </html>

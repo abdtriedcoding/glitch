@@ -12,7 +12,7 @@ import { ActionTooltip } from "@/components/action-tooltip";
 import { Member, MemberRole, Message, User } from "@prisma/client";
 import { Form, FormControl, FormField } from "@/components/ui/form";
 import { editChannelMessage } from "@/app/actions/editChannelMessage";
-import { EditChannelMessageformSchema } from "@/lib/validationSchemas";
+import { EditChannelMessageformSchema } from "@/lib/validation-schemas";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
 import { DeleteMessagelModal } from "@/components/modals/delete-message-modal";

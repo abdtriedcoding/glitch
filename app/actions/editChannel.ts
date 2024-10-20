@@ -4,7 +4,7 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { MemberRole } from "@prisma/client";
-import { ChannelFormSchema } from "@/lib/validationSchemas";
+import { ChannelFormSchema } from "@/lib/validation-schemas";
 
 export async function editChannel(
   values: z.infer<typeof ChannelFormSchema>,

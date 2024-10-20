@@ -1,6 +1,7 @@
 "use client";
 
 import { z } from "zod";
+import { toast } from "sonner";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -9,8 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createServer } from "@/app/actions/createServer";
-import { ServerFormSchema } from "@/lib/validationSchemas";
+import { createServer } from "@/app/actions/create-server";
+import { ServerFormSchema } from "@/lib/validation-schemas";
 import { DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import {
   Form,
@@ -41,10 +42,14 @@ export function AddServerModal({ children }: { children: React.ReactNode }) {
   });
 
   async function onSubmit(values: z.infer<typeof ServerFormSchema>) {
-    const server = await createServer(values);
-    router.refresh();
-    router.push(`/s/${server.id}`);
+    const { data, success, error } = await createServer(values);
     form.reset();
+    if (success && data) {
+      toast.success("Your new community server has been created! 🎉");
+      router.push(`/s/${data.id}`);
+    } else {
+      toast.error(error);
+    }
     setOpen(false);
   }
 
@@ -60,7 +65,7 @@ export function AddServerModal({ children }: { children: React.ReactNode }) {
   return (
     <Dialog open={open} onOpenChange={handleModalChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="lg:max-w-screen-lg overflow-y-scroll max-h-screen scrollbar">
+      <DialogContent className="overflow-y-scroll max-h-screen scrollbar">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl">
             Create Your Server

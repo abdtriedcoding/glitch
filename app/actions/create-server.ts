@@ -4,25 +4,18 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { v4 as uuidv4 } from "uuid";
+import { revalidatePath } from "next/cache";
 import { MemberRole } from "@prisma/client";
+import { ServerFormSchema } from "@/lib/validation-schemas";
 
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Server name is required.",
-  }),
-  imageUrl: z.string().min(1, {
-    message: "Server image is required.",
-  }),
-});
-
-export async function createServer(values: z.infer<typeof formSchema>) {
+export async function createServer(values: z.infer<typeof ServerFormSchema>) {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) {
     throw new Error("User not authenticated");
   }
 
-  const validatedFields = formSchema.safeParse(values);
+  const validatedFields = ServerFormSchema.safeParse(values);
 
   if (!validatedFields.success) {
     throw new Error("Invalid fields. Failed to create server.");
@@ -56,8 +49,10 @@ export async function createServer(values: z.infer<typeof formSchema>) {
       },
     });
 
-    return server;
-  } catch {
-    throw new Error("Something went wrong!!");
+    revalidatePath(`/s/${server?.id}`);
+    return { success: true, data: server };
+  } catch (error) {
+    console.error("Error creating server:", error);
+    return { success: false, error: "Failed to create server." };
   }
 }

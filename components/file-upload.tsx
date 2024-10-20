@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { File, X } from "lucide-react";
+import { toast } from "sonner";
+import { useState } from "react";
+import { File, Loader2, X } from "lucide-react";
 import { UploadDropzone } from "@/lib/uploadthing";
 
 interface FileUploadProps {
@@ -17,17 +19,29 @@ export function FileUpload({
   value,
   onChange,
 }: FileUploadProps) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   const fileType = value?.split(".").pop();
 
   if (value && fileType !== "pdf") {
     return (
       <div className="flex w-full justify-center">
-        <div className="relative h-20 w-20">
+        <div className="relative h-20 w-20 overflow-visible rounded-full">
+          {imageLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-full">
+              <Loader2 className="animate-spin h-5 w-5 text-black" />
+            </div>
+          )}
           <Image
             fill
             src={value}
             alt="Upload"
-            className="rounded-full object-cover"
+            className={`rounded-full object-cover transition-all duration-500 ease-in-out ${
+              imageLoaded
+                ? "blur-lg scale-110 opacity-0"
+                : "blur-0 scale-100 opacity-100"
+            }`}
+            onLoadingComplete={() => setImageLoaded(false)}
           />
           <button
             onClick={() => onChange("")}
@@ -71,12 +85,10 @@ export function FileUpload({
       endpoint={endpoint}
       onClientUploadComplete={(res) => {
         onChange(res?.[0].url);
+        setImageLoaded(true);
       }}
       onUploadError={(error: Error) => {
-        console.log(
-          "🚀 ~ file: file-upload.tsx:64 ~ FileUpload ~ error:",
-          error
-        );
+        toast.error(error.message);
       }}
     />
   );

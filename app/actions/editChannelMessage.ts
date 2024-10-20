@@ -5,7 +5,7 @@ import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { MemberRole } from "@prisma/client";
 import { pusherServer } from "@/lib/pusherServer";
-import { EditChannelMessageformSchema } from "@/lib/validationSchemas";
+import { EditChannelMessageformSchema } from "@/lib/validation-schemas";
 
 export async function editChannelMessage(
   values: z.infer<typeof EditChannelMessageformSchema>,

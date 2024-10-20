@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { editChannel } from "@/app/actions/editChannel";
-import { ChannelFormSchema } from "@/lib/validationSchemas";
+import { ChannelFormSchema } from "@/lib/validation-schemas";
 import { DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import {
   Form,

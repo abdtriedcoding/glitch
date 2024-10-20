@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateServer } from "@/app/actions/updateServer";
-import { ServerFormSchema } from "@/lib/validationSchemas";
+import { ServerFormSchema } from "@/lib/validation-schemas";
 import { DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import {
   Form,
