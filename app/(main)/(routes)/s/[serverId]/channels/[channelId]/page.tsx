@@ -72,6 +72,7 @@ export default async function Page({ params }: ChannelIdPageProps) {
         name={channel.name}
         initialMessages={serializedMessages}
         channelId={channelId}
+        serverId={serverId}
         currentMember={member}
       />
       <ChatInput
