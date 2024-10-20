@@ -1,0 +1,207 @@
+import { z } from "zod";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { format } from "date-fns";
+import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Member, MemberRole, Message, User } from "@prisma/client";
+import { ActionTooltip } from "@/components/action-tooltip";
+import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
+import { Form, FormControl, FormField } from "@/components/ui/form";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+const roleIcons = {
+  GUEST: null,
+  MODERATOR: <ShieldCheck className="h-4 w-4 text-indigo-500" />,
+  ADMIN: <ShieldAlert className="h-4 w-4 text-rose-500" />,
+};
+
+const formSchema = z.object({
+  content: z.string().min(1),
+});
+
+interface MessageWithMemberWithProfile {
+  message: Message & {
+    member: Member & { user: User };
+  };
+  currentMember: Member;
+}
+
+export function ChatItem({
+  message,
+  currentMember,
+}: MessageWithMemberWithProfile) {
+  const [isEditiing, setIsEditiing] = useState(false);
+  const fileType = message.fileUrl?.split(".").pop();
+  const isPdf = fileType === "pdf" && message.fileUrl;
+  const isImage = !isPdf && message.fileUrl;
+  const isUpdated = message.updatedAt !== message.createdAt;
+  const isAdmin = currentMember.role === MemberRole.ADMIN;
+  const isModerator = currentMember.role === MemberRole.MODERATOR;
+  const isOwner = message.member.id === currentMember.id;
+  const canDeleteMessage =
+    !message.deleted && (isAdmin || isModerator || isOwner);
+  const canEditMessage = !message.deleted && isOwner && !message.fileUrl;
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      content: message.content!,
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log(values);
+  };
+  const isLoading = form.formState.isSubmitting;
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === "Enter") {
+        setIsEditiing(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isEditiing]);
+
+  return (
+    <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
+      <div className="group flex gap-x-2 items-center w-full">
+        <div className="cursor-pointer hover:drop-shadow-md transition">
+          <Avatar>
+            <AvatarImage src={message.member.user.image ?? ""} />
+            <AvatarFallback>
+              {message.member.user.name?.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+        </div>
+        <div className="flex flex-col w-full">
+          <div className="flex items-center gap-x-2">
+            <div className="flex items-center">
+              <p className="text-sm font-semibold hover:underline cursor-pointer mr-1">
+                {message.member.user.name}
+              </p>
+              <ActionTooltip label={message.member.role}>
+                {roleIcons[message.member.role]}
+              </ActionTooltip>
+            </div>
+            <span className="text-sm text-zinc-500 dark:text-zinc-400">
+              {format(new Date(message.createdAt), "MMMM d, yyyy, HH:mm")}
+            </span>
+          </div>
+          {isImage && (
+            <a
+              href={message.fileUrl!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative aspect-square rounded-md overflow-hidden border flex items-center bg-secondary h-48 w-48"
+            >
+              <Image
+                src={message.fileUrl!}
+                alt="Image"
+                className="object-cover object-center"
+                width={200}
+                height={200}
+              />
+            </a>
+          )}
+          {isPdf && (
+            <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
+              <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
+              <a
+                href={message.fileUrl!}
+                target="_blank"
+                rel="noopener norefferrer"
+                className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
+              >
+                PDF File
+              </a>
+            </div>
+          )}
+          {!message.fileUrl && !isEditiing && (
+            <p
+              className={cn(
+                "text-sm text-zinc-600 dark:text-zinc-300",
+                message.deleted &&
+                  "italic text-zinc-500 dark:text-zinc-400 text-sm mt-1"
+              )}
+            >
+              {message.content}
+              {isUpdated && !message.deleted && (
+                <span className="text-[10px] mx-2 text-zinc-500 dark:text-zinc-400">
+                  (edited)
+                </span>
+              )}
+            </p>
+          )}
+          {!message.fileUrl && isEditiing && (
+            <Form {...form}>
+              <form
+                className="flex items-center pt-2 gap-x-2 w-full"
+                onSubmit={form.handleSubmit(onSubmit)}
+              >
+                <FormField
+                  control={form.control}
+                  name="content"
+                  render={({ field }) => (
+                    <FormControl>
+                      <div className="relative w-full">
+                        <Input
+                          disabled={isLoading}
+                          className="p-2 bg-zinc-200/90 dark:bg-zinc-700/75
+                      border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0
+                      text-zinc-600 dark:text-zinc-200"
+                          placeholder="Edit your message"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                  )}
+                />
+                <Button size="sm" variant="primary">
+                  Save
+                </Button>
+              </form>
+              <span className="text-[10px] mt-1 text-zinc-400">
+                Press escape to cancel, Enter to save
+              </span>
+            </Form>
+          )}
+        </div>
+      </div>
+      {canDeleteMessage && (
+        <div
+          className="hidden group-hover:flex items-center gap-x-2 absolute 
+        p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm"
+        >
+          {canEditMessage && (
+            <ActionTooltip label="Edit">
+              <Edit
+                className="h-4 w-4 text-zinc-500 dark:text-zinc-400
+                hover:text-zinc-600 dark:hover:text-zinc-300 cursor-pointer ml-auto transition"
+                onClick={() => setIsEditiing((prev) => !prev)}
+              />
+            </ActionTooltip>
+          )}
+          {canDeleteMessage && (
+            <ActionTooltip label="Delete">
+              <Trash
+                className="h-4 w-4 text-zinc-500 dark:text-zinc-400
+                hover:text-zinc-600 dark:hover:text-zinc-300 cursor-pointer ml-auto transition"
+                onClick={() => {}}
+              />
+            </ActionTooltip>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
