@@ -1,18 +1,17 @@
-import { signIn } from "@/auth";
+"use client";
+
 import { Sparkle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { handleSignIn } from "@/app/actions/authActions";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   GitHubAuthButton,
   GoogleAuthButton,
 } from "@/components/marketing/login-buttons";
 
-export function AuthModal() {
+export function AuthModal({ children }: { children: React.ReactNode }) {
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button>Try for Free</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="overflow-hidden p-0 md:max-w-md md:rounded-2xl md:border">
         <div className="w-full">
           <div className="flex flex-col items-center justify-center space-y-3 border-b bg-background px-4 py-6 pt-8 text-center md:px-16">
@@ -32,8 +31,7 @@ export function AuthModal() {
             <form
               className="w-full"
               action={async () => {
-                "use server";
-                await signIn("google");
+                await handleSignIn("google");
               }}
             >
               <GoogleAuthButton />
@@ -43,8 +41,7 @@ export function AuthModal() {
             <form
               className="w-full"
               action={async () => {
-                "use server";
-                await signIn("github");
+                await handleSignIn("github");
               }}
             >
               <GitHubAuthButton />
