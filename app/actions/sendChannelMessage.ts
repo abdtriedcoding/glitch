@@ -4,7 +4,7 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { pusherServer } from "@/lib/pusherServer";
-import { ChatInputFormSchema } from "@/lib/validationSchemas";
+import { ChatInputFormSchema } from "@/lib/validation-schemas";
 
 export async function sendChannelMessage(
   values: z.infer<typeof ChatInputFormSchema>,

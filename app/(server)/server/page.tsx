@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { CreateServerModal } from "@/components/modals/create-server-modal";
 
-export default async function Page() {
+export default async function ServerPage() {
   const session = await auth();
   const user = session?.user;
   if (!user) redirect("/");

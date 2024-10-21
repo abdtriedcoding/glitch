@@ -112,15 +112,18 @@ const secondRow = TESTIMONIALS.slice(TESTIMONIALS.length / 2);
 export function Testimonials() {
   return (
     <section className="w-full space-y-6">
-      <h1 className="text-center text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
-        <span className="relative bg-gradient-to-r from-indigo-500 to-purple-500/80 bg-clip-text font-extrabold text-transparent">
-          Trusted by all
-        </span>
-      </h1>
-      <p className="text-center leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-        Join thousands of satisfied users who rely on our platform for their
-        personal and professional productivity needs.
-      </p>
+      <div className="px-4 md:px-8">
+        <h1 className="text-center text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
+          <span className="relative bg-gradient-to-r from-indigo-500 to-purple-500/80 bg-clip-text font-extrabold text-transparent">
+            Trusted by all
+          </span>
+        </h1>
+        <p className="text-center leading-normal text-muted-foreground sm:text-xl sm:leading-8">
+          Join thousands of satisfied users who rely on our platform for their
+          personal and professional productivity needs.
+        </p>
+      </div>
+
       <div className="relative flex w-full flex-col items-center justify-center overflow-hidden py-10 ">
         <Marquee pauseOnHover className="[--duration:20s]">
           {firstRow.map((review, idx) => (

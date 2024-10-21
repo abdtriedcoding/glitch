@@ -1,6 +1,7 @@
 "use client";
 
 import { z } from "zod";
+import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -9,8 +10,8 @@ import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 import { DialogFooter } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createServer } from "@/app/actions/createServer";
-import { ServerFormSchema } from "@/lib/validationSchemas";
+import { createServer } from "@/app/actions/create-server";
+import { ServerFormSchema } from "@/lib/validation-schemas";
 import {
   Form,
   FormControl,
@@ -39,16 +40,21 @@ export function CreateServerModal() {
   });
 
   async function onSubmit(values: z.infer<typeof ServerFormSchema>) {
-    await createServer(values);
-    router.refresh();
+    const { data, success, error } = await createServer(values);
     form.reset();
+    if (success && data) {
+      toast.success("Your new community server has been created! 🎉");
+      router.push(`/s/${data.id}`);
+    } else {
+      toast.error(error);
+    }
   }
 
   const isLoading = form.formState.isSubmitting;
 
   return (
     <Dialog open>
-      <DialogContent className="lg:max-w-screen-lg overflow-y-scroll max-h-screen scrollbar">
+      <DialogContent className="overflow-y-scroll max-h-screen scrollbar">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl">
             Create Your Server

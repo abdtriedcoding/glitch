@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EmojiPicker } from "@/components/emoji-picker";
-import { ChatInputFormSchema } from "@/lib/validationSchemas";
+import { ChatInputFormSchema } from "@/lib/validation-schemas";
 import { sendChannelMessage } from "@/app/actions/sendChannelMessage";
 import { MessageFileModal } from "@/components/modals/message-file-modal";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";

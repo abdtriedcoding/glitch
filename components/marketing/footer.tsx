@@ -3,7 +3,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 export function Footer() {
   return (
     <footer className="border-t">
-      <div className="container mx-auto flex h-16 items-center justify-between py-4">
+      <div className="flex h-16 items-center justify-between px-4">
         <p className="text-sm">
           Built by
           <a
@@ -13,7 +13,6 @@ export function Footer() {
             {" "}
             @abdtriedcoding
           </a>
-          . Open source for everyone.
         </p>
         <ThemeToggle />
       </div>
