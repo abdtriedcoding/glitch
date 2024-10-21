@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { MemberRole } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 export async function deleteChannel(serverId: string, channelId: string) {
   const session = await auth();
@@ -35,7 +36,11 @@ export async function deleteChannel(serverId: string, channelId: string) {
         },
       },
     });
-  } catch {
-    throw new Error("Something went wrong!!");
+
+    revalidatePath(`/s/${serverId}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting server:", error);
+    return { success: false, error: "Failed to delete channel." };
   }
 }

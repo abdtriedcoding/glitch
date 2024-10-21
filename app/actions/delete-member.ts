@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function deleteMember(serverId: string, memberId: string) {
   const session = await auth();
@@ -11,7 +12,7 @@ export async function deleteMember(serverId: string, memberId: string) {
   }
 
   try {
-    await prisma.server.update({
+    const server = await prisma.server.update({
       where: {
         id: serverId,
         userId: userId!,
@@ -27,7 +28,11 @@ export async function deleteMember(serverId: string, memberId: string) {
         },
       },
     });
-  } catch {
-    throw new Error("Something went wrong!!");
+
+    revalidatePath(`/s/${server?.id}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting member:", error);
+    return { success: false, error: "Failed to kick member." };
   }
 }

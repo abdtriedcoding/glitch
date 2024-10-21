@@ -1,15 +1,15 @@
 "use client";
 
 import { z } from "zod";
+import { toast } from "sonner";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { ChannelType } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { editChannel } from "@/app/actions/editChannel";
+import { updateChannel } from "@/app/actions/update-channel";
 import { ChannelFormSchema } from "@/lib/validation-schemas";
 import { DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -47,7 +47,6 @@ export function EditChannelModal({
   name: string;
   type: ChannelType;
 }) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof ChannelFormSchema>>({
@@ -59,10 +58,14 @@ export function EditChannelModal({
   });
 
   async function onSubmit(values: z.infer<typeof ChannelFormSchema>) {
-    await editChannel(values, serverId, channelId);
-    router.refresh();
+    const { success, error } = await updateChannel(values, serverId, channelId);
     form.reset();
-    setOpen(false);
+    if (success) {
+      toast.success("Channel updated successfully! 🎉");
+      setOpen(false);
+    } else {
+      toast.error(error);
+    }
   }
 
   const isLoading = form.formState.isSubmitting;

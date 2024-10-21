@@ -37,9 +37,11 @@ import {
 export function CreateChannelModal({
   children,
   serverId,
+  channelType,
 }: {
   children: React.ReactNode;
   serverId: string;
+  channelType?: ChannelType;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -47,7 +49,7 @@ export function CreateChannelModal({
     resolver: zodResolver(ChannelFormSchema),
     defaultValues: {
       name: "",
-      type: ChannelType.TEXT,
+      type: channelType ?? ChannelType.TEXT,
     },
   });
 

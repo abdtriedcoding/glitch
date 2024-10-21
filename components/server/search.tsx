@@ -48,7 +48,7 @@ export function Search({ searchData }: SearchProps) {
     if (type === "channel") {
       router.push(`/s/${params?.serverId}/channels/${id}`);
     }
-
+    // TODO: need to check wether member chat is required or not
     if (type === "member") {
       router.push(`/s/${params?.serverId}/conversations/${id}`);
     }
@@ -82,7 +82,7 @@ export function Search({ searchData }: SearchProps) {
                 {data.map(({ id, name, icon }) => (
                   <CommandItem key={id} onSelect={() => onClick({ id, type })}>
                     {icon}
-                    <span className="text-sm font-semibold">{name}</span>
+                    <span className="text-sm font-semibold ml-2">{name}</span>
                   </CommandItem>
                 ))}
               </CommandGroup>

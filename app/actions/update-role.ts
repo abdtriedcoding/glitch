@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { MemberRole } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 export async function updateRole(
   serverId: string,
@@ -16,7 +17,7 @@ export async function updateRole(
   }
 
   try {
-    await prisma.server.update({
+    const server = await prisma.server.update({
       where: {
         id: serverId,
         userId: userId!,
@@ -37,7 +38,11 @@ export async function updateRole(
         },
       },
     });
-  } catch {
-    throw new Error("Something went wrong!!");
+
+    revalidatePath(`/s/${server?.id}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating member role:", error);
+    return { success: false, error: "Failed to update member role." };
   }
 }

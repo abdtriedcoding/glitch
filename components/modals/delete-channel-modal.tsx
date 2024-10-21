@@ -1,10 +1,11 @@
 "use client";
 
+import { toast } from "sonner";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { deleteChannel } from "@/app/actions/deleteChannel";
+import { deleteChannel } from "@/app/actions/delete-channel";
 import {
   DialogDescription,
   DialogFooter,
@@ -34,11 +35,15 @@ export function DeleteChannelModal({
 
   const onDelete = async () => {
     setIsLoading(true);
-    await deleteChannel(serverId, channelId);
-    router.refresh();
-    router.push(`/s/${serverId}`);
+    const { success, error } = await deleteChannel(serverId, channelId);
+    if (success) {
+      toast.success("Channel deleted successfully! 🎉");
+      setOpen(false);
+      router.push(`/s/${serverId}`);
+    } else {
+      toast.error(error);
+    }
     setIsLoading(false);
-    setOpen(false);
   };
 
   return (
