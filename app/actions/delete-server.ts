@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function deleteServer(serverId: string) {
   const session = await auth();
@@ -11,13 +12,17 @@ export async function deleteServer(serverId: string) {
   }
 
   try {
-    await prisma.server.delete({
+    const server = await prisma.server.delete({
       where: {
         id: serverId,
         userId,
       },
     });
-  } catch {
-    throw new Error("Something went wrong!!");
+
+    revalidatePath(`/s/${server.id}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting server:", error);
+    return { success: false, error: "Failed to delete server." };
   }
 }

@@ -12,7 +12,7 @@ export async function leaveServer(serverId: string) {
   }
 
   try {
-    await prisma.server.update({
+    const server = await prisma.server.update({
       where: {
         id: serverId,
         userId: {
@@ -32,8 +32,11 @@ export async function leaveServer(serverId: string) {
         },
       },
     });
-    revalidatePath(`/s/${serverId}`);
-  } catch {
-    throw new Error("Something went wrong!!");
+
+    revalidatePath(`/s/${server.id}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Error leaving server:", error);
+    return { success: false, error: "Failed to leave server." };
   }
 }
