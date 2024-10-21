@@ -1,10 +1,10 @@
 "use client";
 
 import { z } from "zod";
+import { toast } from "sonner";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { ChannelType } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -41,7 +41,6 @@ export function CreateChannelModal({
   children: React.ReactNode;
   serverId: string;
 }) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof ChannelFormSchema>>({
@@ -53,10 +52,14 @@ export function CreateChannelModal({
   });
 
   async function onSubmit(values: z.infer<typeof ChannelFormSchema>) {
-    await createChannel(values, serverId);
-    router.refresh();
+    const { success, error } = await createChannel(values, serverId);
     form.reset();
-    setOpen(false);
+    if (success) {
+      toast.success("Community channel created! 🎉");
+      setOpen(false);
+    } else {
+      toast.error(error);
+    }
   }
 
   const isLoading = form.formState.isSubmitting;

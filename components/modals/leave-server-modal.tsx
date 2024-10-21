@@ -1,10 +1,11 @@
 "use client";
 
+import { toast } from "sonner";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { leaveServer } from "@/app/actions/leaveServer";
+import { leaveServer } from "@/app/actions/leave-server";
 import {
   DialogDescription,
   DialogFooter,
@@ -32,11 +33,15 @@ export function LeaveServerModal({
 
   const onLeave = async () => {
     setIsLoading(true);
-    await leaveServer(serverId);
-    router.refresh();
-    router.push("/");
+    const { success, error } = await leaveServer(serverId);
+    if (success) {
+      toast.success("Left the server successfully! 🎉");
+      router.push("/");
+      setOpen(false);
+    } else {
+      toast.error(error);
+    }
     setIsLoading(false);
-    setOpen(false);
   };
 
   return (

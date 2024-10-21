@@ -1,15 +1,15 @@
 "use client";
 
 import { z } from "zod";
+import { toast } from "sonner";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateServer } from "@/app/actions/updateServer";
+import { updateServer } from "@/app/actions/update-server";
 import { ServerFormSchema } from "@/lib/validation-schemas";
 import { DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -39,7 +39,6 @@ export function EditServerModal({
   imageUrl: string;
   serverId: string;
 }) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof ServerFormSchema>>({
@@ -51,9 +50,13 @@ export function EditServerModal({
   });
 
   async function onSubmit(values: z.infer<typeof ServerFormSchema>) {
-    await updateServer(values, serverId);
-    router.refresh();
-    setOpen(false);
+    const { success, error } = await updateServer(values, serverId);
+    if (success) {
+      toast.success("Server updated successfully! 🎉");
+      setOpen(false);
+    } else {
+      toast.error(error);
+    }
   }
 
   const isLoading = form.formState.isSubmitting;

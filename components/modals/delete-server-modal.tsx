@@ -1,10 +1,11 @@
 "use client";
 
+import { toast } from "sonner";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { deleteServer } from "@/app/actions/deleteServer";
+import { deleteServer } from "@/app/actions/delete-server";
 import {
   DialogDescription,
   DialogFooter,
@@ -32,11 +33,15 @@ export function DeleteServerModal({
 
   const onDelete = async () => {
     setIsLoading(true);
-    await deleteServer(serverId);
-    router.refresh();
-    router.push("/");
+    const { success, error } = await deleteServer(serverId);
+    if (success) {
+      toast.success("Server deleted successfully! 🎉");
+      router.push("/");
+      setOpen(false);
+    } else {
+      toast.error(error);
+    }
     setIsLoading(false);
-    setOpen(false);
   };
 
   return (

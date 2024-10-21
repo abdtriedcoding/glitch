@@ -3,18 +3,11 @@
 import { z } from "zod";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
-
-const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Server name is required.",
-  }),
-  imageUrl: z.string().min(1, {
-    message: "Server image is required.",
-  }),
-});
+import { revalidatePath } from "next/cache";
+import { ServerFormSchema } from "@/lib/validation-schemas";
 
 export async function updateServer(
-  values: z.infer<typeof formSchema>,
+  values: z.infer<typeof ServerFormSchema>,
   serverId: string
 ) {
   const session = await auth();
@@ -23,7 +16,7 @@ export async function updateServer(
     throw new Error("User not authenticated");
   }
 
-  const validatedFields = formSchema.safeParse(values);
+  const validatedFields = ServerFormSchema.safeParse(values);
 
   if (!validatedFields.success) {
     throw new Error("Invalid fields. Failed to update server.");
@@ -32,7 +25,7 @@ export async function updateServer(
   const { name, imageUrl } = validatedFields.data;
 
   try {
-    await prisma.server.update({
+    const server = await prisma.server.update({
       where: {
         id: serverId,
         userId,
@@ -42,7 +35,11 @@ export async function updateServer(
         imageUrl,
       },
     });
-  } catch {
-    throw new Error("Something went wrong!!");
+
+    revalidatePath(`/s/${server.id}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating server:", error);
+    return { success: false, error: "Failed to update server." };
   }
 }
