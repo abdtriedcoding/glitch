@@ -2,7 +2,7 @@
 
 import type { User } from "next-auth";
 import { LogOut } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { handleSignOut } from "@/app/actions/authActions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -35,8 +35,8 @@ export function UserAccountNav({ user }: { user: User }) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer"
-          onSelect={() => {
-            signOut();
+          onSelect={async () => {
+            await handleSignOut();
           }}
         >
           <div className="flex items-center space-x-2.5">

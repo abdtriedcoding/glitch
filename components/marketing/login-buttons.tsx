@@ -12,11 +12,11 @@ export function GoogleAuthButton() {
   return (
     <>
       {pending ? (
-        <Button variant="default" className="w-full" disabled>
+        <Button variant="primary" className="w-full" disabled>
           <Loader2 className="size-4 mr-2 animate-spin" /> Please wait
         </Button>
       ) : (
-        <Button variant="default" className="w-full">
+        <Button variant="primary" className="w-full">
           <Image src={GoogleLogo} className="size-4 mr-2" alt="Google Logo" />
           Sign in with Google
         </Button>
@@ -30,11 +30,11 @@ export function GitHubAuthButton() {
   return (
     <>
       {pending ? (
-        <Button variant="default" className="w-full" disabled>
+        <Button variant="primary" className="w-full" disabled>
           <Loader2 className="size-4 mr-2 animate-spin" /> Please wait
         </Button>
       ) : (
-        <Button variant="default" className="w-full">
+        <Button variant="primary" className="w-full">
           <Image src={GithubLogo} className="size-5 mr-2" alt="Google Logo" />
           Sign in with GitHub
         </Button>
