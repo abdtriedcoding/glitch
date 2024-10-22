@@ -1,27 +1,23 @@
 import { z } from "zod";
 import Image from "next/image";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { roleIcons } from "@/constant";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Edit, FileIcon, Trash } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { ActionTooltip } from "@/components/action-tooltip";
 import { Member, MemberRole, Message, User } from "@prisma/client";
 import { Form, FormControl, FormField } from "@/components/ui/form";
-import { editChannelMessage } from "@/app/actions/editChannelMessage";
+import { editChannelMessage } from "@/app/actions/edit-channel-message";
 import { EditChannelMessageformSchema } from "@/lib/validation-schemas";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
 import { DeleteMessagelModal } from "@/components/modals/delete-message-modal";
-
-const roleIcons = {
-  GUEST: null,
-  MODERATOR: <ShieldCheck className="h-4 w-4 text-indigo-500" />,
-  ADMIN: <ShieldAlert className="h-4 w-4 text-rose-500" />,
-};
 
 interface MessageWithMemberWithProfile {
   channelId: string;
@@ -55,20 +51,30 @@ export function ChatItem({
   const form = useForm<z.infer<typeof EditChannelMessageformSchema>>({
     resolver: zodResolver(EditChannelMessageformSchema),
     defaultValues: {
-      content: message.content!,
+      content: message.content,
     },
   });
 
   const onSubmit = async (
     values: z.infer<typeof EditChannelMessageformSchema>
   ) => {
-    await editChannelMessage(values, serverId, channelId, message.id);
-    form.reset();
-    setIsEditiing(false);
+    const { success, error } = await editChannelMessage(
+      values,
+      serverId,
+      channelId,
+      message.id
+    );
+    if (!success) {
+      toast.error(error);
+    } else {
+      form.reset();
+      setIsEditiing(false);
+    }
   };
 
   const isLoading = form.formState.isSubmitting;
 
+  // TODO: need to see if it is required
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" || e.key === "Enter") {
