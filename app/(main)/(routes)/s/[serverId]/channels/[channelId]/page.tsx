@@ -1,12 +1,12 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { ChannelType } from "@prisma/client";
+import { MediaRoom } from "@/components/media-room";
 import { ChatInput } from "@/components/chat/chat-input";
 import { ChatHeader } from "@/components/chat/chat-header";
 import { ChatMessages } from "@/components/chat/chat-messages";
-import { getChannelMessages } from "@/app/actions/getChannelMessages";
-import { ChannelType } from "@prisma/client";
-import { MediaRoom } from "@/components/media-room";
+import { getChannelMessages } from "@/app/actions/get-channel-messages";
 
 interface ChannelIdPageProps {
   params: {
@@ -74,7 +74,7 @@ export default async function Page({ params }: ChannelIdPageProps) {
         <>
           <ChatMessages
             name={channel.name}
-            initialMessages={serializedMessages}
+            initialMessages={serializedMessages ?? []}
             channelId={channelId}
             serverId={serverId}
             currentMember={member}
