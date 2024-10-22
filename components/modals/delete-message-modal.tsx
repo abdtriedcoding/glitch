@@ -1,9 +1,10 @@
 "use client";
 
+import { toast } from "sonner";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { deleteMessage } from "@/app/actions/deleteMessage";
+import { deleteMessage } from "@/app/actions/delete-message";
 import {
   DialogDescription,
   DialogFooter,
@@ -15,7 +16,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useRouter } from "next/navigation";
 
 export function DeleteMessagelModal({
   children,
@@ -28,14 +28,19 @@ export function DeleteMessagelModal({
   channelId: string;
   messageId: string;
 }) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const onDelete = async () => {
     setIsLoading(true);
-    await deleteMessage(serverId, channelId, messageId);
-    router.refresh();
+    const { success, error } = await deleteMessage(
+      serverId,
+      channelId,
+      messageId
+    );
+    if (!success) {
+      toast.error(error);
+    }
     setIsLoading(false);
     setOpen(false);
   };

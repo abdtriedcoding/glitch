@@ -4,7 +4,7 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { MemberRole } from "@prisma/client";
-import { pusherServer } from "@/lib/pusherServer";
+import { pusherServer } from "@/lib/pusher-server";
 import { EditChannelMessageformSchema } from "@/lib/validation-schemas";
 
 export async function editChannelMessage(
@@ -43,7 +43,8 @@ export async function editChannelMessage(
     });
 
     if (!server) {
-      throw new Error("Server not found");
+      console.error("Error while editing channel message.");
+      return { success: false, error: "Server not found." };
     }
 
     const channel = await prisma.channel.findFirst({
@@ -54,13 +55,15 @@ export async function editChannelMessage(
     });
 
     if (!channel) {
-      throw new Error("Channel not found");
+      console.error("Error while editing channel message.");
+      return { success: false, error: "Channel not found." };
     }
 
     const member = server.members.find((member) => member.userId === userId);
 
     if (!member) {
-      throw new Error("Member not found");
+      console.error("Error while editing channel message.");
+      return { success: false, error: "Member not found." };
     }
 
     const message = await prisma.message.findFirst({
@@ -78,7 +81,8 @@ export async function editChannelMessage(
     });
 
     if (!message || message.deleted) {
-      throw new Error("Message not found");
+      console.error("Error while editing channel message.");
+      return { success: false, error: "Message not found." };
     }
 
     const isAuthor = message.memberId === member.id;
@@ -107,7 +111,14 @@ export async function editChannelMessage(
     });
 
     await pusherServer.trigger(channelId, "message-updated", updatedMessage);
+    return {
+      success: true,
+    };
   } catch {
-    throw new Error("Something went wrong!!");
+    console.error("Error while editing channel message.");
+    return {
+      success: false,
+      error: "Error while editing channel message.",
+    };
   }
 }

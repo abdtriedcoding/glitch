@@ -29,6 +29,6 @@ export async function getChannelMessages(channelId: string) {
 
     return initialMessages;
   } catch {
-    throw new Error("Something went wrong!!");
+    console.log("Unable to get channnel messages!!");
   }
 }
