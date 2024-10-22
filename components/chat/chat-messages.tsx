@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { pusherClient } from "@/lib/pusherClient";
+import { pusherClient } from "@/lib/pusher-client";
 import { Member, Message, User } from "@prisma/client";
 import { ChatItem } from "@/components/chat/chat-item";
 import { ChatWelcome } from "@/components/chat/chat-welcome";

@@ -3,12 +3,11 @@
 import { z } from "zod";
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EmojiPicker } from "@/components/emoji-picker";
 import { ChatInputFormSchema } from "@/lib/validation-schemas";
-import { sendChannelMessage } from "@/app/actions/sendChannelMessage";
+import { sendChannelMessage } from "@/app/actions/send-channel-message";
 import { MessageFileModal } from "@/components/modals/message-file-modal";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 
@@ -21,8 +20,6 @@ export function ChatInput({
   channelId: string;
   serverId: string;
 }) {
-  const router = useRouter();
-
   const form = useForm<z.infer<typeof ChatInputFormSchema>>({
     resolver: zodResolver(ChatInputFormSchema),
     defaultValues: {
@@ -33,7 +30,6 @@ export function ChatInput({
   async function onSubmit(values: z.infer<typeof ChatInputFormSchema>) {
     await sendChannelMessage(values, channelId, serverId);
     form.reset();
-    router.refresh();
   }
 
   const isLoading = form.formState.isSubmitting;
