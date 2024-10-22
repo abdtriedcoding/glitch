@@ -1,30 +1,14 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { channelIcons } from "@/constant";
+import { Edit, Lock, Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { Edit, Hash, Lock, Mic, Trash, Video } from "lucide-react";
+import { DialogTrigger } from "@/components/ui/dialog";
+import { ActionTooltip } from "@/components/action-tooltip";
 import { EditChannelModal } from "@/components/modals/edit-channel-modal";
 import { DeleteChannelModal } from "@/components/modals/delete-channel-modal";
-import {
-  Member,
-  User,
-  Server,
-  Channel,
-  MemberRole,
-  ChannelType,
-} from "@prisma/client";
-
-const channelIcons = {
-  [ChannelType.TEXT]: (
-    <Hash className="flex-shrink-0 w-5 h-5 text-zinc-500 dark:text-zinc-400" />
-  ),
-  [ChannelType.AUDIO]: (
-    <Mic className="flex-shrink-0 w-5 h-5 text-zinc-500 dark:text-zinc-400" />
-  ),
-  [ChannelType.VIDEO]: (
-    <Video className="flex-shrink-0 w-5 h-5 text-zinc-500 dark:text-zinc-400" />
-  ),
-};
+import { Member, User, Server, Channel, MemberRole } from "@prisma/client";
 
 export function ServerChannel({
   channel,
@@ -72,14 +56,22 @@ export function ServerChannel({
             name={channel.name}
             type={channel.type}
           >
-            <Edit className="hidden group-hover:block h-4 w-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+            <ActionTooltip label="Edit channel" side="right" align="center">
+              <DialogTrigger asChild>
+                <Edit className="hidden group-hover:block h-4 w-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+              </DialogTrigger>
+            </ActionTooltip>
           </EditChannelModal>
           <DeleteChannelModal
             serverId={server.id}
             channelId={channel.id}
             channelName={channel.name}
           >
-            <Trash className="hidden group-hover:block h-4 w-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+            <ActionTooltip label="Delete Channel" side="right" align="center">
+              <DialogTrigger asChild>
+                <Trash className="hidden group-hover:block h-4 w-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+              </DialogTrigger>
+            </ActionTooltip>
           </DeleteChannelModal>
         </div>
       )}

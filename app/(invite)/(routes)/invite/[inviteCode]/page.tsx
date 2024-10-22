@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
-export default async function Page({
+export default async function InvitePage({
   params,
 }: {
   params: {
@@ -45,5 +45,5 @@ export default async function Page({
     return redirect(`/s/${server.id}`);
   }
 
-  return <></>;
+  return null;
 }

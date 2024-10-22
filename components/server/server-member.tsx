@@ -1,22 +1,17 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { roleIcons } from "@/constant";
 import { Member, Server, User } from "@prisma/client";
 import { useParams, useRouter } from "next/navigation";
-import { ShieldAlert, ShieldCheck } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-const roleIcons = {
-  GUEST: null,
-  MODERATOR: <ShieldCheck className="w-4 h-4 ml-2 text-indigo-500" />,
-  ADMIN: <ShieldAlert className="w-4 h-4 ml-2 text-rose-500" />,
-};
 
 interface ServerMemberProps {
   member: Member & { user: User };
   server: Server;
 }
 
+// TODO: need to see we need one-one chat or not
 export function ServerMember({ member }: ServerMemberProps) {
   const router = useRouter();
   const params = useParams();

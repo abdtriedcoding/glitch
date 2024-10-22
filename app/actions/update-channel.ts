@@ -4,9 +4,10 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { MemberRole } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import { ChannelFormSchema } from "@/lib/validation-schemas";
 
-export async function editChannel(
+export async function updateChannel(
   values: z.infer<typeof ChannelFormSchema>,
   serverId: string,
   channelId: string
@@ -55,7 +56,11 @@ export async function editChannel(
         },
       },
     });
-  } catch {
-    throw new Error("Something went wrong!!");
+
+    revalidatePath(`/s/${serverId}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating server:", error);
+    return { success: false, error: "Failed to update channel." };
   }
 }

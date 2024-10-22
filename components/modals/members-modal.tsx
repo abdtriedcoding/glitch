@@ -1,10 +1,11 @@
 "use client";
 
+import { toast } from "sonner";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { updateRole } from "@/app/actions/updateRole";
+import { roleIcons } from "@/constant";
+import { updateRole } from "@/app/actions/update-role";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { deleteMember } from "@/app/actions/deleteMember";
+import { deleteMember } from "@/app/actions/delete-member";
 import { Member, User, Server, Channel, MemberRole } from "@prisma/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -13,7 +14,6 @@ import {
   Loader2,
   MoreVertical,
   Shield,
-  ShieldAlert,
   ShieldCheck,
   ShieldQuestion,
 } from "lucide-react";
@@ -45,14 +45,7 @@ interface MembersModalProps {
   children: React.ReactNode;
 }
 
-const roleIcons = {
-  GUEST: null,
-  MODERATOR: <ShieldCheck className="w-4 h-4 ml-2 text-indigo-500" />,
-  ADMIN: <ShieldAlert className="w-4 h-4 ml-2 text-rose-500" />,
-};
-
 export function MembersModal({ server, children }: MembersModalProps) {
-  const router = useRouter();
   const [loadingId, setLoadingId] = useState("");
 
   const onRoleChange = async (
@@ -61,15 +54,23 @@ export function MembersModal({ server, children }: MembersModalProps) {
     role: MemberRole
   ) => {
     setLoadingId(memberId);
-    await updateRole(serverId, memberId, role);
-    router.refresh();
+    const { success, error } = await updateRole(serverId, memberId, role);
+    if (success) {
+      toast.success("Member role updated! 🎉");
+    } else {
+      toast.error(error);
+    }
     setLoadingId("");
   };
 
   const onKick = async (serverId: string, memberId: string) => {
     setLoadingId(memberId);
-    await deleteMember(serverId, memberId);
-    router.refresh();
+    const { success, error } = await deleteMember(serverId, memberId);
+    if (success) {
+      toast.success("Member kicked out successfully! 🎉");
+    } else {
+      toast.error(error);
+    }
     setLoadingId("");
   };
 

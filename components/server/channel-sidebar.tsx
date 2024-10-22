@@ -1,27 +1,14 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { ChannelType } from "@prisma/client";
 import { Search } from "@/components/server/search";
+import { channelIcons, roleIcons } from "@/constant";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Member, User, Server, Channel } from "@prisma/client";
 import { ServerMember } from "@/components/server/server-member";
 import { ServerChannel } from "@/components/server/server-channel";
 import { ChannelHeader } from "@/components/server/channel-header";
 import { ChannelHeading } from "@/components/navigation/channel-heading";
-import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from "lucide-react";
-
-const channelIcons = {
-  [ChannelType.TEXT]: <Hash className="h-4 w-4 mr-2" />,
-  [ChannelType.AUDIO]: <Mic className="h-4 w-4 mr-2" />,
-  [ChannelType.VIDEO]: <Video className="h-4 w-4 mr-2" />,
-};
-
-const roleIcons = {
-  GUEST: null,
-  MODERATOR: <ShieldCheck className="w-4 h-4 mr-2 text-indigo-500" />,
-  ADMIN: <ShieldAlert className="w-4 h-4 mr-2 text-rose-500" />,
-};
+import { Member, User, Server, Channel, ChannelType } from "@prisma/client";
 
 interface ChannelSidebarProps {
   server: Server & {
@@ -106,6 +93,7 @@ export async function ChannelSidebar({ server }: ChannelSidebarProps) {
                 label="Text Channels"
                 sectionType="channels"
                 role={role}
+                channelType={ChannelType.TEXT}
               />
 
               <div className="space-y-1">
@@ -127,6 +115,7 @@ export async function ChannelSidebar({ server }: ChannelSidebarProps) {
                 label="Voice Channels"
                 sectionType="channels"
                 role={role}
+                channelType={ChannelType.AUDIO}
               />
 
               <div className="space-y-1">
@@ -148,6 +137,7 @@ export async function ChannelSidebar({ server }: ChannelSidebarProps) {
                 label="Video Channels"
                 sectionType="channels"
                 role={role}
+                channelType={ChannelType.VIDEO}
               />
 
               <div className="space-y-1">
