@@ -3,7 +3,8 @@
 import { z } from "zod";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
-import { pusherServer } from "@/lib/pusherServer";
+import { revalidatePath } from "next/cache";
+import { pusherServer } from "@/lib/pusher-server";
 import { ChatInputFormSchema } from "@/lib/validation-schemas";
 
 export async function sendChannelMessage(
@@ -20,7 +21,7 @@ export async function sendChannelMessage(
   const validatedFields = ChatInputFormSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    throw new Error("Invalid fields. Failed to create server.");
+    throw new Error("Invalid fields. Failed to send message.");
   }
 
   const { content, fileUrl } = validatedFields.data;
@@ -78,7 +79,8 @@ export async function sendChannelMessage(
     });
 
     pusherServer.trigger(channelId, "incoming-message", message);
-  } catch {
-    throw new Error("Something went wrong!!");
+    revalidatePath(`/s/${serverId}/channels/${channelId}`);
+  } catch (error) {
+    console.error("Error sending message:", error);
   }
 }

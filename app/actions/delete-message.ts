@@ -3,7 +3,7 @@
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { MemberRole } from "@prisma/client";
-import { pusherServer } from "@/lib/pusherServer";
+import { pusherServer } from "@/lib/pusher-server";
 
 export async function deleteMessage(
   serverId: string,
@@ -32,7 +32,8 @@ export async function deleteMessage(
     });
 
     if (!server) {
-      throw new Error("Server not found");
+      console.error("Error while deleting channel message.");
+      return { success: false, error: "Server not found." };
     }
 
     const channel = await prisma.channel.findFirst({
@@ -43,13 +44,15 @@ export async function deleteMessage(
     });
 
     if (!channel) {
-      throw new Error("Channel not found");
+      console.error("Error while deleting channel message.");
+      return { success: false, error: "Channel not found." };
     }
 
     const member = server.members.find((member) => member.userId === userId);
 
     if (!member) {
-      throw new Error("Member not found");
+      console.error("Error while deleting channel message.");
+      return { success: false, error: "Channel not found." };
     }
 
     const message = await prisma.message.findFirst({
@@ -67,7 +70,8 @@ export async function deleteMessage(
     });
 
     if (!message || message.deleted) {
-      throw new Error("Message not found");
+      console.error("Error while deleting channel message.");
+      return { success: false, error: "Message not found." };
     }
 
     const isAuthor = message.memberId === member.id;
@@ -98,7 +102,13 @@ export async function deleteMessage(
     });
 
     await pusherServer.trigger(channelId, "message-deleted", deletedMessage);
+    return {
+      success: true,
+    };
   } catch {
-    throw new Error("Something went wrong!!");
+    return {
+      success: false,
+      error: "Error while deleting channel message.",
+    };
   }
 }
