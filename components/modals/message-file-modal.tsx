@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import { sendChannelMessage } from "@/app/actions/send-channel-message";
 import {
   Form,
   FormControl,
@@ -23,8 +24,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { sendChannelMessage } from "@/app/actions/sendChannelMessage";
-import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   fileUrl: z.string().min(1, {
@@ -41,7 +40,6 @@ export function MessageFileModal({
   channelId: string;
   serverId: string;
 }) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const form = useForm({
@@ -60,7 +58,6 @@ export function MessageFileModal({
       channelId,
       serverId
     );
-    router.refresh();
     form.reset();
     setOpen(false);
   }
