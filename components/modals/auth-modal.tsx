@@ -1,12 +1,14 @@
 "use client";
 
 import { Sparkle } from "lucide-react";
-import { handleSignIn } from "@/app/actions/authActions";
+import { handleSignIn } from "@/app/actions/auth-actions";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   GitHubAuthButton,
   GoogleAuthButton,
 } from "@/components/marketing/login-buttons";
+
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL!;
 
 export function AuthModal({ children }: { children: React.ReactNode }) {
   return (
@@ -15,8 +17,7 @@ export function AuthModal({ children }: { children: React.ReactNode }) {
       <DialogContent className="overflow-hidden p-0 md:max-w-md md:rounded-2xl md:border">
         <div className="w-full">
           <div className="flex flex-col items-center justify-center space-y-3 border-b bg-background px-4 py-6 pt-8 text-center md:px-16">
-            {/* TODO: add hosted site url */}
-            <a href="/">
+            <a href={siteUrl}>
               <Sparkle className="h-10 w-10" />
             </a>
             <h3 className="font-urban text-2xl font-bold">Sign In</h3>
@@ -37,7 +38,6 @@ export function AuthModal({ children }: { children: React.ReactNode }) {
               <GoogleAuthButton />
             </form>
 
-            {/* TODO: need to add github auth functionality */}
             <form
               className="w-full"
               action={async () => {

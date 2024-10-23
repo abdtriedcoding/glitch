@@ -2,7 +2,7 @@
 
 import type { User } from "next-auth";
 import { LogOut } from "lucide-react";
-import { handleSignOut } from "@/app/actions/authActions";
+import { handleSignOut } from "@/app/actions/auth-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
