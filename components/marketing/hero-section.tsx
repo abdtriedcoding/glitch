@@ -45,7 +45,6 @@ export function HeroSection({
           <RainbowButton>Get Started</RainbowButton>
         </AuthModal>
       )}
-      {/* TODO: need to updated these demo images */}
       <div className="relative mt-[8rem]">
         <div className="rounded-xl border border-white/10 bg-white bg-opacity-[0.01] before:absolute before:bottom-1/2 before:left-0 before:top-0 before:h-full before:w-full before:opacity-0 before:[background-image:linear-gradient(to_bottom,var(--color-one),var(--color-one),transparent_40%)] before:[filter:blur(180px)] before:animate-image-glow">
           <BorderBeam
@@ -57,12 +56,12 @@ export function HeroSection({
           />
 
           <img
-            src="/thumbnail-dark.png"
+            src="/hero-dark.png"
             alt="Hero Image"
             className="relative hidden h-full w-full rounded-[inherit] border object-contain dark:block"
           />
           <img
-            src="/thumbnail-light.png"
+            src="/hero-light.png"
             alt="Hero Image"
             className="relative block h-full w-full  rounded-[inherit] border object-contain dark:hidden"
           />

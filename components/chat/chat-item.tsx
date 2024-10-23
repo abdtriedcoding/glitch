@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Edit, FileIcon, Trash } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { ActionTooltip } from "@/components/action-tooltip";
@@ -16,8 +15,14 @@ import { Member, MemberRole, Message, User } from "@prisma/client";
 import { Form, FormControl, FormField } from "@/components/ui/form";
 import { editChannelMessage } from "@/app/actions/edit-channel-message";
 import { EditChannelMessageformSchema } from "@/lib/validation-schemas";
+import { CalendarDays, Edit, FileIcon, Loader2, Trash } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DeleteMessagelModal } from "@/components/modals/delete-message-modal";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 interface MessageWithMemberWithProfile {
   channelId: string;
@@ -74,10 +79,9 @@ export function ChatItem({
 
   const isLoading = form.formState.isSubmitting;
 
-  // TODO: need to see if it is required
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" || e.key === "Enter") {
+      if (e.key === "Escape") {
         setIsEditiing(false);
       }
     };
@@ -102,10 +106,37 @@ export function ChatItem({
         </div>
         <div className="flex flex-col w-full">
           <div className="flex items-center gap-x-2">
-            <div className="flex items-center">
-              <p className="text-sm font-semibold hover:underline cursor-pointer mr-1">
-                {message.member.user.name}
-              </p>
+            <div className="flex items-center space-x-1">
+              <HoverCard>
+                <HoverCardTrigger className="cursor-pointer hover:underline">
+                  {message.member.user.name}
+                </HoverCardTrigger>
+                <HoverCardContent side="top" className="w-72">
+                  <div className="flex justify-between space-x-4">
+                    <Avatar>
+                      <AvatarImage src={message.member.user.image ?? ""} />
+                      <AvatarFallback>
+                        {message.member.user.name?.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-semibold">
+                        @{message.member.user.name?.toLowerCase()}
+                      </h4>
+                      <div className="flex items-center pt-2">
+                        <CalendarDays className="mr-2 h-4 w-4 opacity-70" />
+                        <span className="text-xs text-muted-foreground">
+                          Joined{" "}
+                          {format(
+                            new Date(message.member.user.createdAt),
+                            "MMMM d, yyyy, HH:mm"
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
               <ActionTooltip label={message.member.role}>
                 {roleIcons[message.member.role]}
               </ActionTooltip>
@@ -183,12 +214,15 @@ export function ChatItem({
                     </FormControl>
                   )}
                 />
-                <Button size="sm" variant="primary">
+                <Button size="sm" variant="primary" disabled={isLoading}>
+                  {isLoading && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   Save
                 </Button>
               </form>
               <span className="text-[10px] mt-1 text-zinc-400">
-                Press escape to cancel, Enter to save
+                Press escape to cancel
               </span>
             </Form>
           )}
