@@ -41,10 +41,12 @@ const Confetti = (options: ConfettiOptions) => {
   });
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 Confetti.shapeFromPath = (options: { path: string; [key: string]: any }) => {
   return confetti.shapeFromPath({ ...options });
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 Confetti.shapeFromText = (options: { text: string; [key: string]: any }) => {
   return confetti.shapeFromText({ ...options });
 };
