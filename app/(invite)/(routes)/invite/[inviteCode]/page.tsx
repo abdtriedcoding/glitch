@@ -1,6 +1,13 @@
 import { auth } from "@/auth";
+import { Metadata } from "next";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Invite Friends to Join",
+  description:
+    "Send invitations to your friends to join and create a collaborative space for real-time communication.",
+};
 
 export default async function InvitePage({
   params,

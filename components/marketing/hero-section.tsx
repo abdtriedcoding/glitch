@@ -28,13 +28,13 @@ export function HeroSection({
         <ChevronRight className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
       </AnimatedGradientText>
       <h1 className="text-balance bg-gradient-to-r from-indigo-500 to-purple-500/80 bg-clip-text py-6 text-5xl font-medium leading-none tracking-tighter text-transparent  sm:text-6xl md:text-7xl lg:text-8xl">
-        Connect and Chat
-        <br className="hidden md:block" /> with friends in real-time
+        Connect and Collaborate
+        <br className="hidden md:block" /> with communities in real-time
       </h1>
       <p className="mb-12 text-balance text-lg tracking-tight text-muted-foreground md:text-xl">
-        Stay connected with friends and communities in one place.
-        <br className="hidden md:block" /> Seamless communication and
-        collaboration, all in real-time.
+        Stay connected with groups and teams in one place.
+        <br className="hidden md:block" /> Experience seamless communication and
+        collaboration through real-time messaging, voice, and video calls.
       </p>
       {user ? (
         <RainbowButton>
@@ -57,12 +57,12 @@ export function HeroSection({
           />
 
           <img
-            src="/hero-dark.png"
+            src="/thumbnail-dark.png"
             alt="Hero Image"
             className="relative hidden h-full w-full rounded-[inherit] border object-contain dark:block"
           />
           <img
-            src="/hero-light.png"
+            src="/thumbnail-light.png"
             alt="Hero Image"
             className="relative block h-full w-full  rounded-[inherit] border object-contain dark:hidden"
           />
