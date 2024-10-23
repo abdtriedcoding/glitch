@@ -4,7 +4,7 @@
 </div>
 
 <div align="center">
-  <a href="https://notedwebapp.vercel.app">glitchweb.vercel.app</a>
+  <a href="https://glitchweb.vercel.app">glitchweb.vercel.app</a>
 </div>
 <br/>
 
