@@ -58,7 +58,10 @@ export function ServerChannel({
           >
             <ActionTooltip label="Edit channel" side="right" align="center">
               <DialogTrigger asChild>
-                <Edit className="hidden group-hover:block h-4 w-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+                <Edit
+                  onClick={(e) => e.stopPropagation()}
+                  className="hidden group-hover:block h-4 w-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                />
               </DialogTrigger>
             </ActionTooltip>
           </EditChannelModal>
@@ -69,7 +72,10 @@ export function ServerChannel({
           >
             <ActionTooltip label="Delete Channel" side="right" align="center">
               <DialogTrigger asChild>
-                <Trash className="hidden group-hover:block h-4 w-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+                <Trash
+                  onClick={(e) => e.stopPropagation()}
+                  className="hidden group-hover:block h-4 w-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+                />
               </DialogTrigger>
             </ActionTooltip>
           </DeleteChannelModal>

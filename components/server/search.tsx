@@ -15,7 +15,6 @@ import {
 interface SearchProps {
   searchData: {
     label: string;
-    type: string;
     data:
       | {
           id: string;
@@ -42,16 +41,9 @@ export function Search({ searchData }: SearchProps) {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  const onClick = ({ id, type }: { id: string; type: string }) => {
+  const onClick = ({ id }: { id: string }) => {
     setOpen(false);
-
-    if (type === "channel") {
-      router.push(`/s/${params?.serverId}/channels/${id}`);
-    }
-    // TODO: need to check wether member chat is required or not
-    if (type === "member") {
-      router.push(`/s/${params?.serverId}/conversations/${id}`);
-    }
+    router.push(`/s/${params?.serverId}/channels/${id}`);
   };
 
   return (
@@ -75,12 +67,12 @@ export function Search({ searchData }: SearchProps) {
         <CommandInput placeholder="Search all channels and members" />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
-          {searchData.map(({ label, type, data }) => {
+          {searchData.map(({ label, data }) => {
             if (!data?.length) return null;
             return (
               <CommandGroup key={label} heading={label}>
                 {data.map(({ id, name, icon }) => (
-                  <CommandItem key={id} onSelect={() => onClick({ id, type })}>
+                  <CommandItem key={id} onSelect={() => onClick({ id })}>
                     {icon}
                     <span className="text-sm font-semibold ml-2">{name}</span>
                   </CommandItem>

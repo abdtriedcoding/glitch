@@ -43,7 +43,6 @@ export async function ChannelSidebar({ server }: ChannelSidebarProps) {
   const searchData = [
     {
       label: "Text Channels",
-      type: "channel",
       data: textChannels.map((channel) => ({
         id: channel.id,
         name: channel.name,
@@ -52,7 +51,6 @@ export async function ChannelSidebar({ server }: ChannelSidebarProps) {
     },
     {
       label: "Voice Channels",
-      type: "channel",
       data: audioChannels.map((channel) => ({
         id: channel.id,
         name: channel.name,
@@ -61,7 +59,6 @@ export async function ChannelSidebar({ server }: ChannelSidebarProps) {
     },
     {
       label: "Video Channels",
-      type: "channel",
       data: videoChannels.map((channel) => ({
         id: channel.id,
         name: channel.name,
@@ -70,7 +67,6 @@ export async function ChannelSidebar({ server }: ChannelSidebarProps) {
     },
     {
       label: "Members",
-      type: "member",
       data: members?.map((member) => ({
         id: member.id,
         name: member.user.name,

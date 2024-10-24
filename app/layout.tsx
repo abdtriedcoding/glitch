@@ -8,7 +8,6 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { ThemeProvider } from "@/components/theme-provider";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
-import { ModalProvider } from "@/components/providers/modal-provider";
 
 const font = Open_Sans({ subsets: ["latin"] });
 
@@ -74,10 +73,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-          {/* TODO: need to check if this modla provider is needed or not */}
-          <ModalProvider />
           {children}
           <Toaster richColors position="bottom-right" />
+          {/* TODO: need to add vercel analytics */}
         </ThemeProvider>
       </body>
     </html>

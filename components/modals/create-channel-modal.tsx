@@ -9,7 +9,7 @@ import { ChannelType } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createChannel } from "@/app/actions/createChannel";
+import { createChannel } from "@/app/actions/create-channel";
 import { ChannelFormSchema } from "@/lib/validation-schemas";
 import { DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import {
