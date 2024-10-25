@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+    <h1 align="center">Glitch</h1>
+    <h5>A platform designed to streamline communication for communities, organizations, and schools. It combines real-time messaging 💬, voice 🎙️ and video channels 🎥, group chats 💻, and file sharing 📁 in one place, making collaboration and staying connected simple and efficient.</h5>
+</div>
 
-## Getting Started
+<div align="center">
+  <a href="https://notedwebapp.vercel.app">glitchweb.vercel.app</a>
+</div>
+<br/>
 
-First, run the development server:
+![Thumbnail](/public/thumbnail-dark.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Key Features
+
+- Dark & Light Theme Setup 🌑🌕
+- Invitations Management 🎟️
+- Server Settings ⚙️
+- Manage Members 🧑‍🤝‍🧑 (kick, role change)
+- Channel Creation 🛠️ (text, audio, and video channels)
+- Delete & Leave Server Modal ❌🏃‍♂️
+- Server Search Modal 🔍
+- Server Channels List 📜
+- Edit Channels ✏️
+- Chat Header 📝
+- Emoji Bar 😄
+- Group Messaging 📩 (group conversations between users)
+- Socket.io Setup 🌐 (real-time communication)
+- Message Attachments 📎 (files, images, etc.)
+- Chat Input Component 📝 (message input with features like file upload and emoji picker)
+- Chat Scroll Hook 📜 (automatically scrolls to new messages)
+- Chat Messages Component 💬 (renders all messages with real-time updates)
+- Delete Message Functionality ❌
+- Video Calls 📹 (built-in video call support)
+
+### Prerequisites
+
+**You should have Nodejs installed on your system**
+
+### Cloning the repository
+
+```shell
+git clone https://github.com/abdtriedcoding/glitch.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Install packages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```shell
+npm i
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Setup .env file taking refrence from .env.example file
 
-## Learn More
+### Start the app
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```shell
+npm run dev
+```
