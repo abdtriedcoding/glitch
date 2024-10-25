@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { Open_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -75,7 +76,7 @@ export default function RootLayout({
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           {children}
           <Toaster richColors position="bottom-right" />
-          {/* TODO: need to add vercel analytics */}
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
